@@ -173,6 +173,14 @@ npm run build
   ```
 
 - 部署后建议对线上地址复验一次：`npm run test:dist -- https://你的域名`
+  > ⚠️ **本地复验请避免受限端口。** Node 内置 `fetch`（undici）会拒绝一批端口
+  > （Fetch 规范的 bad port list，例如 **4190** 在列表内、**4173 / 4188** 不在）。
+  > `http.get`、`curl`、浏览器都不受影响，所以只有走 `test:dist` 时才会暴露成
+  > `fetch failed / bad port`。这不是代码问题，换端口即可。
+- 站点根目录含 `404.html`：静态托管在找不到路径时会以**真 404 状态码**返回它。
+  请不要把托管配成"找不到就回退返回 index.html"——那会让 `/robots.txt`、`/sitemap.xml`
+  这类被写错的路径也返回 HTML，爬虫拿 HTML 当 sitemap 解析、收录直接失败。
+  `npm run test:dist` 的第 ⑥ 组会守住这条。
 - 首次访问测试条件：5 Mbps 下行 / 100 ms 延迟 / 冷缓存 → 首次可交互 1,813 ms，
   精细版 6,746 ms 就绪；二次访问可交互 357 ms。
 
