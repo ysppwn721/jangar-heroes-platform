@@ -387,7 +387,68 @@ export const runGen = async () => {
   <meta name="description" content="《江格尔》十二英雄——基于手写 WebGL 管线的史诗数字展陈交互系统 的技术控制台：构建期资产处理管线、运行时跨端渲染引擎、数据与知识层的量化证据。" />
   <title>技术控制台｜《江格尔》十二英雄——基于手写 WebGL 管线的史诗数字展陈交互系统</title>
   <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
-  <style>${CSS}</style>
+  <style>${CSS}
+/* ── 打印 / PDF：把深色主题整体反转为浅色 ──────────────────────────────
+   为什么必须显式覆盖每一个变量与内联色：
+   这三页的配色在屏幕上是"深底浅字"，打印后若只把 body 改成白底，
+   浅色文字会留在白纸上——实测 console.html 有 290 个文字节点对比度 < 3。
+   下面按"白纸黑字 + 可读的深色强调"重写，而不是微调。 */
+@media print {
+  :root, body {
+    --bg: #ffffff; --bg-2: #ffffff; --panel: #ffffff; --panel-2: #f6f6f4;
+    --line: #b9b9b3; --line-soft: #d8d8d2;
+    --ink: #111111; --ink-2: #1f1f1f; --ink-dim: #3a3a3a; --ink-faint: #5a5a5a;
+    --gold: #6b5410; --gold-soft: #6b5410; --gold-bright: #4a3a08;
+    --green: #1d4a3f; --ok: #1d5c3a; --warn: #6b5410; --bad: #8a2f1e;
+    --mono: ui-monospace, Consolas, monospace;
+    background: #ffffff !important;
+    color: #111111 !important;
+  }
+  /* 页面骨架：去掉粘性定位、毛玻璃与阴影，避免打印时错位或糊成灰块 */
+  .top { position: static !important; background: #ffffff !important; backdrop-filter: none !important; }
+  header.hero, section, main, footer { background: #ffffff !important; }
+  .graph-pane, .detail-pane, .ask-box, .disclose, .card, .metric, .basis,
+  pre, table, th, td, .hit, .turn, .variant, .rel, .srcchip, .tag, .pill, .chip {
+    background: #ffffff !important; color: #111111 !important;
+    box-shadow: none !important; backdrop-filter: none !important;
+  }
+  /* 表格表头原本是深底金字 → 纸面上改为浅灰底深字 */
+  thead th, th { background: #eeeeea !important; color: #111111 !important; }
+  /* 代码块：白底深字 + 细边框，避免实心黑块 */
+  pre { border: 1px solid #b9b9b3 !important; }
+  pre .c { color: #5a5a5a !important; }
+  pre .g { color: #4a3a08 !important; }
+  code, kbd { background: #f0f0ec !important; color: #111111 !important; }
+  /* 链接：打印后要能看出是链接并保留地址可读性 */
+  a { color: #14508a !important; border-bottom-color: #b9b9b3 !important; }
+  /* 强调与状态色换成纸面可读的深色 */
+  h1 em, .epithet, .ev-t, strong, b { color: #111111 !important; }
+  .eyebrow, .ev-k, .metric .k, .block h3, .disclose h2, .basis h3, .status,
+  .lanet, .rel .type, .variant .form, .srcchip, .tag, .pill { color: #4a4a4a !important; }
+  .metric .v { color: #4a3a08 !important; }
+  .metric .v.ok { color: #1d5c3a !important; }
+  .metric .v.warn { color: #6b5410 !important; }
+  .answer.refused { color: #8a2f1e !important; border-left-color: #8a2f1e !important; }
+  .mark.ok { color: #1d5c3a !important; }
+  .mark.warn { color: #6b5410 !important; }
+  .mark.fail { color: #8a2f1e !important; }
+  /* 交互控件在纸面上没有意义，去掉视觉重量 */
+  button, .toggle, #send, .mode button { background: #f0f0ec !important; color: #111111 !important; border-color: #b9b9b3 !important; }
+  .graph-bar { background: #ffffff !important; border-bottom-color: #d8d8d2 !important; }
+  /* 图谱是交互组件，打印时以静态提示替代空白区域 */
+  #graph { display: none !important; }
+  .graph-pane::after {
+    content: "交互式知识图谱需在浏览器中查看（本页为打印件）。";
+    display: block; padding: 18px; color: #4a4a4a; font-size: 13px;
+  }
+  .detail-pane { max-height: none !important; overflow: visible !important; }
+  /* 避免在标题后断页、避免行内元素被拆开 */
+  h1, h2, h3 { break-after: avoid; }
+  tr, .hit, .turn, .card, .metric { break-inside: avoid; }
+  @page { margin: 14mm; }
+}
+
+</style>
   </head>
   <body>
   <a class="skip-link" href="#arch" style="position:absolute;left:-9999px">跳到主要内容</a>

@@ -3210,6 +3210,26 @@ button.filter,.filter sup { color:#5b6650; }
 .detail-button:hover:not(:disabled) { background:#d9bd8218; }
 .detail-button:disabled { opacity:.75; }
 .viewer-tools { align-items:center; }
+
+/* ── 打印 / PDF：浅色主题的补充修正 ──────────────────────────────────
+   本页整体已是浅底深字，实测只有 14 处低对比，集中在金色按钮（金底金字）
+   与评审导航卡片（浅灰底浅字）。这里只针对这些局部修正。
+   为什么必须做：答辩与材料评审都可能打印，若打印出来不可读，那份材料就是废纸，
+   而这个风险在屏幕上完全看不出来（量测见 tools/check-print.cjs）。 */
+@media print {
+  .button-gold, .button, .header-explore, .text-link {
+    background: #ffffff !important; color: #111111 !important;
+    border: 1px solid #8a8a80 !important; box-shadow: none !important;
+  }
+  .evidence-nav .ev-card {
+    background: #ffffff !important; border: 1px solid #b9b9b3 !important;
+  }
+  .evidence-nav .ev-k, .evidence-nav .ev-d, .evidence-nav .ev-note { color: #3a3a3a !important; }
+  .evidence-nav .ev-t { color: #111111 !important; }
+  .hero, .exhibit, .section-shell { break-inside: avoid; }
+  #model-canvas, .model-poster { break-inside: avoid; }
+  @page { margin: 14mm; }
+}
 @media(max-width:760px) {
   .viewer-bottom { gap:8px; }
   .viewer-status { max-width:48%;line-height:1.7; }

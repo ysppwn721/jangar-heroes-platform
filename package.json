@@ -49,8 +49,9 @@
     "search:build": "node scripts/build-search.mjs",
     "sync:retrieval": "node scripts/sync-retrieval.mjs",
     "test:all": "npm run check && npm run check:css && npm run assets:verify && npm run graph:check && npm run ask:check && npm run knowledge:check && npm run test:roster && npm run sync:retrieval -- --check && npm run test:ui && npm run test:3d && npm run test:content && npm run test:progressive && npm run test:offline && npm run test:layout && npm run test:search",
-    "release": "npm run build && npm run test:site-meta && npm run test:selfcontained && npm run test:dist && npm run test:migration",
-    "test:site-meta": "node tools/check-site-meta.mjs"
+    "release": "npm run build && npm run test:site-meta && npm run test:selfcontained && npm run test:print && npm run test:dist && npm run test:migration",
+    "test:site-meta": "node tools/check-site-meta.mjs",
+    "test:print": "node tools/check-print.cjs"
   },
   "devDependencies": {
     "playwright-core": "^1.63.0"
