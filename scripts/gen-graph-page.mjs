@@ -457,8 +457,8 @@ export const runGen = async () => {
   function richClient(text){
     return String(text == null ? '' : text)
       .replace(/[&<>"']/g, function(c){ return ESC[c]; })
-      .replace(/\*\*([^*\n]{1,120})\*\*/g, '<strong>$1</strong>')
-      .replace(/(^|[^*])\*([^*\n]{1,80})\*(?!\*)/g, '$1<em>$2</em>');
+      .replace(/\\*\\*([^*\\n]{1,120})\\*\\*/g, '<strong>$1</strong>')
+      .replace(/(^|[^*])\\*([^*\\n]{1,80})\\*(?!\\*)/g, '$1<em>$2</em>');
   }
   /* chip() 的 title 属性位也要转义 */
   function attrClient(text){
@@ -559,7 +559,7 @@ export const runGen = async () => {
       var pending = (n.provenance || {}).reviewStatus === '待核对';
       if (onlyPending && !pending) return;
 
-      var g = el('g', { style: 'cursor:pointer' });
+      var g = el('g', { style: 'cursor:pointer', 'data-id': n.id });
       var r = n.nodeType === 'place' ? 30 : (isConcept ? 17 : 12 + Math.min(8, (relSourceCount[n.id] || 0)));
       var fill = n.nodeType === 'place' ? '#235347' : (pending ? '#3a2f18' : '#1c3733');
       var stroke = n.nodeType === 'place' ? '#c9a227' : (pending ? '#c9a227' : '#4a7a6e');
@@ -572,6 +572,22 @@ export const runGen = async () => {
         'stroke-width': n.nodeType === 'place' ? 2 : 1.4,
         'stroke-dasharray': pending ? '3 3' : null,
       }));
+
+      // 节点图标：圆圈里的名字首字。
+      // 为什么用字形而不是图片：图谱节点只有 14 个、半径 12–30px，
+      // 位图缩到这个尺寸既糊又白搭流量（本页是"断网也能看"的页面之一）；
+      // 而中文首字本身就是最辨识的符号，且零请求、随缩放保持清晰。
+      // 加 data-glyph 便于 updatePositions() 把图标与下方标签区分开（两者都是 <text>）。
+      var glyphSize = Math.max(10, Math.round(r * (n.nodeType === 'place' ? 0.62 : 0.92)));
+      var gt = el('text', {
+        x: p.x, y: p.y, 'text-anchor': 'middle', 'dominant-baseline': 'central',
+        'data-glyph': '1',
+        fill: n.nodeType === 'place' ? '#e2c352' : (pending ? '#e2c352' : '#cfe4dc'),
+        style: 'font:600 ' + glyphSize + 'px "Songti SC",Georgia,serif;pointer-events:none;user-select:none',
+        'aria-hidden': 'true',
+      });
+      gt.textContent = n.name.charAt(0);
+      g.appendChild(gt);
 
       if (showLabels) {
         var t = el('text', {
@@ -587,8 +603,129 @@ export const runGen = async () => {
       tip.textContent = n.name + (n.epithet ? '（' + n.epithet + '）' : '') + (pending ? '　⚠ 待核对' : '');
       g.appendChild(tip);
 
-      g.addEventListener('click', function(){ select(n.id); });
+      // 拖动：这是本页最被依赖的交互——radial 布局在密集区必然标签重叠，
+      // 不给用户挪动节点的能力，重叠就没法看清。
+      // ⚠️ 此前这里只写了 #graph.dragging{cursor:grabbing} 这条 CSS，
+      // **没有任何事件监听**，但界面提示写着"可拖动"、光标也是 grab —— 等于骗用户。
+      // 现在补上真实实现（Pointer Events，同时覆盖鼠标与触摸）。
+      //
+      // 性能：pointermove 期间**不能**调用 render()——那会清空并重建整个 SVG
+      // （14 节点 + 23 条贝塞尔曲线），每次鼠标移动都重排一次，拖动会明显卡顿。
+      // 改为只更新受影响的 cx/cy/x/y 与连线 d 属性。
+      var drag = {
+        active: false, moved: false, justDragged: false,
+        id: n.id, radius: r,
+      };
+
+      g.addEventListener('pointerdown', function(ev){
+        if (ev.button !== undefined && ev.button !== 0) return; // 只响应主键
+        var rect = svg.getBoundingClientRect();
+        drag.active = true;
+        drag.moved = false;
+        // 屏幕像素 → viewBox 坐标的换算比（SVG 用了 viewBox，随容器缩放）
+        drag.scaleX = svg.viewBox.baseVal.width / (rect.width || 1);
+        drag.scaleY = svg.viewBox.baseVal.height / (rect.height || 1);
+        drag.startClientX = ev.clientX;
+        drag.startClientY = ev.clientY;
+        drag.startX = pos[n.id].x;
+        drag.startY = pos[n.id].y;
+        svg.classList.add('dragging');
+        // setPointerCapture：指针移出元素后仍能收到 move/up
+        if (g.setPointerCapture && ev.pointerId !== undefined) {
+          try { g.setPointerCapture(ev.pointerId); } catch (e) { /* 环境不支持则忽略 */ }
+        }
+        ev.preventDefault();
+      });
+
+      g.addEventListener('pointermove', function(ev){
+        if (!drag.active) return;
+        var dx = (ev.clientX - drag.startClientX) * drag.scaleX;
+        var dy = (ev.clientY - drag.startClientY) * drag.scaleY;
+        if (!drag.moved && Math.abs(dx) + Math.abs(dy) < 3) return; // 3px 内算点击，不算拖动
+        drag.moved = true;
+        var rr = drag.radius;
+        // 限制在画布内，避免拖出去找不回来
+        pos[n.id].x = Math.max(rr + 6, Math.min(W - rr - 6, drag.startX + dx));
+        pos[n.id].y = Math.max(rr + 6, Math.min(H - rr - 6, drag.startY + dy));
+        updatePositions();
+      });
+
+      function endDrag(ev){
+        if (!drag.active) return;
+        drag.active = false;
+        svg.classList.remove('dragging');
+        if (g.releasePointerCapture && ev && ev.pointerId !== undefined) {
+          try { g.releasePointerCapture(ev.pointerId); } catch (e) { /* 忽略 */ }
+        }
+        // 拖动过就不要再触发"选中"，否则拖完会顺带切换右侧详情
+        if (drag.moved) {
+          drag.justDragged = true;
+          setTimeout(function(){ drag.justDragged = false; }, 0);
+        }
+      }
+      g.addEventListener('pointerup', endDrag);
+      g.addEventListener('pointercancel', endDrag);
+
+      g.addEventListener('click', function(){
+        if (drag.justDragged) return;
+        select(n.id);
+      });
       gNodes.appendChild(g);
+    });
+
+    // 记录本次布局的快照，供 updatePositions() 使用（避免在拖动中查 DOM 反推几何）
+    svg.__links = links.filter(function(l){
+      return showConcepts || !(concepts.some(function(c){ return c.id === l.source || c.id === l.target; }));
+    }).map(function(l){ return { source: l.source, target: l.target, type: l.type }; });
+    svg.__nodes = DATA.nodes.filter(function(n){
+      if (!showConcepts && (n.nodeType === 'place' || n.nodeType === 'tradition')) return false;
+      if (onlyPending && (n.provenance || {}).reviewStatus !== '待核对') return false;
+      return true;
+    }).map(function(n){
+      var isConcept = n.nodeType === 'place' || n.nodeType === 'tradition';
+      return { id: n.id, radius: n.nodeType === 'place' ? 30 : (isConcept ? 17 : 12 + Math.min(8, (relSourceCount[n.id] || 0))) };
+    });
+  }
+
+  /** 只更新几何，不重建 DOM。拖动时逐帧调用。 */
+  function updatePositions(){
+    var nodesByRadius = {};
+    (svg.__nodes || []).forEach(function(n){ nodesByRadius[n.id] = n.radius; });
+
+    // 连线：重算二次贝塞尔控制点
+    var paths = gLinks.children;
+    (svg.__links || []).forEach(function(l, i){
+      var path = paths[i];
+      if (!path) return;
+      var a = pos[l.source], b = pos[l.target];
+      if (!a || !b) return;
+      var dx = b.x - a.x, dy = b.y - a.y;
+      var dir = TYPE_DIR[l.type] !== undefined ? TYPE_DIR[l.type] : 0.3;
+      var cx = (a.x + b.x) / 2 - dy * 0.16 * dir;
+      var cy = (a.y + b.y) / 2 + dx * 0.16 * dir;
+      path.setAttribute('d', 'M' + a.x.toFixed(1) + ' ' + a.y.toFixed(1)
+        + ' Q' + cx.toFixed(1) + ' ' + cy.toFixed(1) + ' ' + b.x.toFixed(1) + ' ' + b.y.toFixed(1));
+    });
+
+    // 节点：圆、图标与标签就地移动。
+    // 注意：每个节点组里有**两个** <text>——图标（data-glyph）与下方标签，
+    // 用 querySelector('text') 会拿到图标、导致标签不动。必须分别定位。
+    var groups = gNodes.children;
+    (svg.__nodes || []).forEach(function(n, i){
+      var grp = groups[i];
+      if (!grp) return;
+      var p = pos[n.id];
+      var rr = nodesByRadius[n.id] || 12;
+      var circles = grp.querySelectorAll('circle');
+      // place 类型有两个圆（外虚线圈 + 实心圆），都要跟着走
+      for (var k = 0; k < circles.length; k++) {
+        circles[k].setAttribute('cx', p.x);
+        circles[k].setAttribute('cy', p.y);
+      }
+      var glyph = grp.querySelector('text[data-glyph]');
+      if (glyph) { glyph.setAttribute('x', p.x); glyph.setAttribute('y', p.y); }
+      var label = grp.querySelector('text:not([data-glyph])');
+      if (label) { label.setAttribute('x', p.x); label.setAttribute('y', p.y + rr + 15); }
     });
   }
 
