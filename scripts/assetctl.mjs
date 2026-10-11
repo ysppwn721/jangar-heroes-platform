@@ -60,6 +60,12 @@ let config = JSON.parse(await fs.readFile(DEFAULT_CONFIG_PATH, 'utf8'));
  * 分钟偏移——既稳定可复现，又保持"看起来像时间"的可读性。
  */
 async function deriveGeneratedAt(inputPaths) {
+  // 配置可显式钉住时间戳（迁移验证用它保证产物可复现）。
+  // 为什么需要这个出口：迁移演示的配置把 outputDir 指向另一个目录，
+  // 内容派生出来的指纹虽稳定，但每次跑迁移验证仍会重写受版本控制的报告，
+  // 让仓库在"跑过验收"之后变脏。钉住一个常量比在指纹里做特例更直白。
+  if (config.generatedAt) return config.generatedAt;
+
   const { createHash } = await import('node:crypto');
   const hash = createHash('sha256');
   for (const p of [...inputPaths].sort()) {

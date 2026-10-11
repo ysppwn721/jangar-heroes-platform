@@ -63,5 +63,6 @@
     "note": "迁移演示资产为程序化生成，无\"原始采集\"阶段，故为空。",
     "models": {}
   },
+  "generatedAt": "2026-10-11T00:00:00.000Z",
   "manifestPath": "migration-demo/models/manifest.json"
 }

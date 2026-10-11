@@ -53,6 +53,9 @@ const mainConfig = JSON.parse(await fs.readFile(path.join(ROOT, 'assetctl.config
 const demoConfig = {
   ...mainConfig,
   name: 'taoguan-migration-check',
+  // 钉住时间戳：迁移报告是**受版本控制的证据文件**，跑一次验收不该让仓库变脏。
+  // 值固定为迁移验证首次落库的日期，改动机器/时间都不影响。
+  generatedAt: '2026-10-11T00:00:00.000Z',
   description: '迁移验证配置：结构与主配置完全一致，仅把输出目录指向一件与江格尔无关的资产。'
     + '用于证明管线是配置驱动的，而不是为某一批资产硬编码的。',
   tiers: {
