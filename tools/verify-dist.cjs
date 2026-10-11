@@ -13,7 +13,9 @@ const PLAYWRIGHT = process.env.PLAYWRIGHT_MODULE
   || 'C:/Users/Administrator/Desktop/互联网+/jiangger-blindbox-website/node_modules/playwright-core';
 const { chromium } = require(PLAYWRIGHT);
 
-const BASE = process.argv[2] || 'http://127.0.0.1:4175';
+// 去掉结尾斜杠：否则 `${BASE}/${path}` 会拼出 `//path`，
+// 而 fetch 会把双斜杠解析成 authority 开头，报 "bad port"（实测踩过）。
+const BASE = (process.argv[2] || 'http://127.0.0.1:4175').replace(/\/+$/, '');
 const PAGES = ['index.html', 'console.html', 'graph.html', 'ask.html'];
 
 async function fetchStatus(url) {
@@ -158,7 +160,16 @@ async function fetchStatus(url) {
   }
   // 被写错的 robots/sitemap 路径不能返回 HTML
   for (const probe of ['/robots.txt', '/sitemap.xml']) {
-    const res = await fetch(`${BASE}${probe}`);
+    const url = `${BASE}${probe}`;
+    let res;
+    try {
+      res = await fetch(url);
+    } catch (error) {
+      // 把真实 URL 打出来：这类 "fetch failed" 靠猜很难定位
+      failures.push(`${probe} 请求失败（URL: ${url}）：${error.message}`);
+      console.log(`  ✗ ${probe.padEnd(32)} fetch 失败  URL=${url}  ${error.message}`);
+      continue;
+    }
     const type = res.headers.get('content-type') || '';
     const ok = res.status === 200 && !type.includes('text/html');
     console.log(`  ${ok ? '✓' : '✗'} ${probe.padEnd(32)} ${res.status} ${type.split(';')[0]}`);
