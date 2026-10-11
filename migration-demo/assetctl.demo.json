@@ -1,0 +1,67 @@
+{
+  "name": "taoguan-migration-check",
+  "description": "迁移验证配置：结构与主配置完全一致，仅把输出目录指向一件与江格尔无关的资产。用于证明管线是配置驱动的，而不是为某一批资产硬编码的。",
+  "tiers": {
+    "detail": {
+      "label": "精细版",
+      "description": "迁移演示资产（程序化陶罐），走与精细版完全相同的校验与报告路径。",
+      "outputDir": "migration-demo/models/detail",
+      "transferBudget": 6291456,
+      "transferBudgetHuman": "6 MiB",
+      "rawBudget": 10485760,
+      "rawBudgetHuman": "10 MiB",
+      "indexComponentType": "auto",
+      "indexTypeName": "auto"
+    }
+  },
+  "budgetMetrics": {
+    "note": "两个指标分管两件事，不能混用。transfer = gzip 后的网络传输体积，决定用户实际下载多少和缓存占用；raw = GLB 原始体积，只受部署平台单文件上限约束。",
+    "transfer": "gzip 字节数（net）",
+    "raw": "GLB 原始字节数（disk/deploy）"
+  },
+  "budgets": {
+    "detailTierTotalBytes": 83886080,
+    "detailTierTotalHuman": "80 MiB",
+    "cloudflareSingleFileBytes": 26214400,
+    "cloudflareSingleFileHuman": "25 MiB",
+    "wechatMainPackageBytes": 1572864,
+    "wechatMainPackageHuman": "1.5 MB",
+    "webFirstInteractiveBudgetMs": 2000,
+    "webDetailReadyBudgetMs": 8000
+  },
+  "vertexLayout": {
+    "description": "顶点属性紧凑存储：位置按轴量化后用满 16 位范围，法线/UV 归一化到 16 位。这是 GLB 内 KHR_mesh_quantization 扩展的实际字节开销。",
+    "bytesPerVertex": {
+      "POSITION": 6,
+      "NORMAL": 3,
+      "TEXCOORD_0": 4
+    },
+    "interleaved": true,
+    "quantizationExtension": "KHR_mesh_quantization"
+  },
+  "runtimeConstraints": {
+    "description": "运行时不允许存在的依赖。自研管线换取的就是这三条约束下的完全可控。",
+    "externalLibraries": [],
+    "dracoDecoder": false,
+    "threeJs": false,
+    "cdnDependencies": false,
+    "note": "网页端无任何第三方脚本或解码器下载；小程序主包 1.5 MB 上限不允许引入体积可观的第三方库。"
+  },
+  "sources": [
+    {
+      "id": "models2",
+      "description": "原始采集/生成资产（单模型 70–117 MB，单尊 150 万三角面）。仓库外保存，不参与构建。",
+      "inRepo": false
+    },
+    {
+      "id": "models",
+      "description": "第一次压缩后的中间产物，作为构建输入。",
+      "inRepo": true
+    }
+  ],
+  "originals": {
+    "note": "迁移演示资产为程序化生成，无\"原始采集\"阶段，故为空。",
+    "models": {}
+  },
+  "manifestPath": "migration-demo/models/manifest.json"
+}

@@ -1,0 +1,87 @@
+{
+  "name": "jiangger-asset-pipeline",
+  "description": "面向超大规模非遗三维资产的构建期处理管线：解包 → 校验 → 量化 → 双级产出 → 预算与缓存优化分析。配置驱动，换一批资产只需改本文件。",
+
+  "tiers": {
+    "preview": {
+      "label": "轻量版",
+      "description": "首屏即可旋转的版本。移动端/弱网/2G 模式默认只加载这一级，用户可手动请求精细版。",
+      "outputDir": "public/models/preview",
+      "transferBudget": 768000,
+      "transferBudgetHuman": "750 KiB",
+      "indexComponentType": 5123,
+      "indexTypeName": "u16"
+    },
+    "detail": {
+      "label": "精细版",
+      "description": "完整精度版本。轻量版就绪后后台流式替换，替换过程保持用户当前角度/缩放/自动旋转状态。",
+      "outputDir": "public/models",
+      "transferBudget": 6291456,
+      "transferBudgetHuman": "6 MiB",
+      "rawBudget": 10485760,
+      "rawBudgetHuman": "10 MiB",
+      "indexComponentType": 5125,
+      "indexTypeName": "u32"
+    }
+  },
+
+  "budgetMetrics": {
+    "note": "两个指标分管两件事，不能混用。transfer = gzip 后的网络传输体积，决定用户实际下载多少和缓存占用；raw = GLB 原始体积，只受部署平台单文件上限约束。",
+    "transfer": "gzip 字节数（net）",
+    "raw": "GLB 原始字节数（disk/deploy）"
+  },
+
+  "budgets": {
+    "detailTierTotalBytes": 83886080,
+    "detailTierTotalHuman": "80 MiB",
+    "cloudflareSingleFileBytes": 26214400,
+    "cloudflareSingleFileHuman": "25 MiB",
+    "wechatMainPackageBytes": 1572864,
+    "wechatMainPackageHuman": "1.5 MB",
+    "webFirstInteractiveBudgetMs": 2000,
+    "webDetailReadyBudgetMs": 8000
+  },
+
+  "vertexLayout": {
+    "description": "顶点属性紧凑存储：位置按轴量化后用满 16 位范围，法线/UV 归一化到 16 位。这是 GLB 内 KHR_mesh_quantization 扩展的实际字节开销。",
+    "bytesPerVertex": {
+      "POSITION": 6,
+      "NORMAL": 3,
+      "TEXCOORD_0": 4
+    },
+    "interleaved": true,
+    "quantizationExtension": "KHR_mesh_quantization"
+  },
+
+  "runtimeConstraints": {
+    "description": "运行时不允许存在的依赖。自研管线换取的就是这三条约束下的完全可控。",
+    "externalLibraries": [],
+    "dracoDecoder": false,
+    "threeJs": false,
+    "cdnDependencies": false,
+    "note": "网页端无任何第三方脚本或解码器下载；小程序主包 1.5 MB 上限不允许引入体积可观的第三方库。"
+  },
+
+  "sources": [
+    { "id": "models2", "description": "原始采集/生成资产（单模型 70–117 MB，单尊 150 万三角面）。仓库外保存，不参与构建。", "inRepo": false },
+    { "id": "models", "description": "第一次压缩后的中间产物，作为构建输入。", "inRepo": true }
+  ],
+
+  "originals": {
+    "note": "原始资产的来源指标。这些数字来自 models2/ 原始文件（仓库外，不参与构建），保留在此以便报告展示「原始 → 产出」的完整对比。产出指标一律从实际 GLB 二进制解析，不引用本表。",
+    "models": {
+      "jiangger":       { "sourceBytes": 87562740, "originalTriangles": 1499884 },
+      "harinidun":      { "sourceBytes": 80620256, "originalTriangles": 1500000 },
+      "alatancheji":    { "sourceBytes": 87203500, "originalTriangles": 1498532 },
+      "hongguer":       { "sourceBytes": 83713240, "originalTriangles": 1500074 },
+      "saber":          { "sourceBytes": 76065472, "originalTriangles": 1499694 },
+      "mingyan":        { "sourceBytes": 80064048, "originalTriangles": 1499872 },
+      "sanala":         { "sourceBytes": 81781212, "originalTriangles": 1499976 },
+      "guzangongbu":    { "sourceBytes": 83519928, "originalTriangles": 1499376 },
+      "harijilagen":    { "sourceBytes": 77959724, "originalTriangles": 1499886 },
+      "hejilagen":      { "sourceBytes": 79369972, "originalTriangles": 1499928 },
+      "naqinshanghuer": { "sourceBytes": 84134252, "originalTriangles": 1500000 },
+      "sailihantabage": { "sourceBytes": 73409904, "originalTriangles": 1499898 }
+    }
+  }
+}

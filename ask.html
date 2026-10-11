@@ -1,0 +1,903 @@
+<!doctype html>
+  <html lang="zh-CN">
+  <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0f1f1c" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="description" content="《江格尔》软件系统的 AI 辅助叙述模块：本地 BM25 检索 + 可关闭的大模型环节，每次回答展示实际命中的语料与得分，依据不足时拒答。" />
+  <title>问史诗 · AI 辅助叙述模块｜《江格尔》十二英雄——基于手写 WebGL 管线的史诗数字展陈交互系统</title>
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+  <style>
+  :root{
+    --bg:#0f1f1c;--bg-2:#142825;--panel:#172f2b;--panel-2:#1c3733;
+    --line:#2a4741;--line-soft:#203a35;
+    --ink:#e8e2d4;--ink-2:#c8c2b2;--ink-dim:#a8a291;--ink-faint:#6f6a5d;
+    --gold:#c9a227;--gold-soft:#8a6a2c;--gold-bright:#e2c352;
+    --green:#235347;--ok:#7fb69f;--warn:#e2c352;--bad:#d98a76;
+    --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+    --sans:"Songti SC","Noto Serif SC",Georgia,"Microsoft YaHei",serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.7;font-size:16px}
+  a{color:var(--gold-bright);text-decoration:none;border-bottom:1px solid var(--line)}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 26px}
+  .top{position:sticky;top:0;z-index:20;background:rgba(15,31,28,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .top-in{max-width:1120px;margin:0 auto;padding:13px 26px;display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;border:0}
+  .brand-mark{width:34px;height:34px;border:1px solid var(--gold-soft);border-radius:4px;display:grid;place-items:center;color:var(--gold);font-size:17px}
+  .brand b{display:block;font-size:15px}
+  .brand small{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--ink-faint)}
+  .top-nav{display:flex;gap:20px;font-size:14px;overflow-x:auto}
+  .top-nav a{border:0;color:var(--ink-dim);white-space:nowrap}
+  .top-nav a:hover{color:var(--gold-bright)}
+
+  header.hero{padding:48px 0 30px;border-bottom:1px solid var(--line-soft)}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.24em;color:var(--gold-soft);text-transform:uppercase;margin:0 0 16px}
+  h1{font-size:clamp(24px,3.4vw,38px);line-height:1.3;margin:0 0 16px;font-weight:600}
+  h1 em{font-style:normal;color:var(--gold-bright)}
+  .lede{font-size:16.5px;color:var(--ink-dim);max-width:82ch;margin:0 0 10px}
+  .lede strong{color:var(--ink);font-weight:600}
+  .disclose{margin:24px 0 0;border:1px solid var(--line);background:var(--bg-2)}
+  .disclose h2{font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--gold-soft);margin:0;padding:13px 18px;border-bottom:1px solid var(--line-soft);text-transform:uppercase}
+  .disclose .rows{padding:6px 18px 14px}
+  .drow{display:flex;gap:14px;padding:9px 0;border-bottom:1px solid var(--line-soft);font-size:14px}
+  .drow:last-child{border-bottom:0}
+  .drow .dt{flex:0 0 128px;color:var(--ink-faint);font-family:var(--mono);font-size:11.5px;padding-top:3px}
+  .drow .dd{flex:1;color:var(--ink-2)}
+  .drow .dd b{color:var(--ink)}
+
+  .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:1px;background:var(--line-soft);border:1px solid var(--line-soft);margin-top:26px}
+  .metric{background:var(--panel);padding:17px 15px}
+  .metric .k{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px}
+  .metric .v{font-family:var(--mono);font-size:23px;color:var(--gold-bright);line-height:1.1;font-variant-numeric:tabular-nums}
+  .metric .v.ok{color:var(--ok)}
+  .metric .n{font-size:12px;color:var(--ink-dim);margin-top:6px}
+
+  main{padding:40px 0 20px}
+  .ask-box{border:1px solid var(--line);background:var(--panel)}
+  .ask-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:14px 18px;border-bottom:1px solid var(--line-soft)}
+  .ask-head .t{font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--gold-soft);text-transform:uppercase}
+  .mode{margin-left:auto;display:flex;gap:6px}
+  .mode button{font-family:var(--mono);font-size:11px;padding:5px 11px;border:1px solid var(--line);background:transparent;color:var(--ink-dim);border-radius:3px;cursor:pointer}
+  .mode button[aria-pressed="true"]{border-color:var(--gold-soft);color:var(--gold-bright);background:var(--panel-2)}
+  .ask-row{display:flex;gap:10px;padding:18px;border-bottom:1px solid var(--line-soft)}
+  #q{flex:1;background:var(--bg-2);border:1px solid var(--line);color:var(--ink);font-family:var(--sans);font-size:16px;padding:13px 15px;border-radius:3px;outline:none}
+  #q:focus{border-color:var(--gold-soft)}
+  #q::placeholder{color:var(--ink-faint)}
+  #send{background:var(--gold-soft);border:1px solid var(--gold-soft);color:#0f1f1c;font-family:var(--sans);font-size:15px;font-weight:600;padding:13px 24px;border-radius:3px;cursor:pointer;white-space:nowrap}
+  #send:hover{background:var(--gold-bright);border-color:var(--gold-bright)}
+  .suggest{padding:14px 18px;display:flex;gap:8px;flex-wrap:wrap}
+  .chip{font-size:13px;padding:5px 12px;border:1px solid var(--line);border-radius:20px;color:var(--ink-dim);cursor:pointer;background:transparent}
+  .chip:hover{border-color:var(--gold-soft);color:var(--gold-bright)}
+
+  .thread{padding:0 18px 18px}
+  .turn{border-top:1px solid var(--line-soft);padding:18px 0}
+  .turn:first-child{border-top:0}
+  .turn .who{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:8px}
+  .turn .qtext{font-size:17px;margin-bottom:14px}
+  .answer{font-size:15.5px;color:var(--ink-2);white-space:pre-wrap}
+  .answer.refused{color:var(--warn);border-left:2px solid var(--gold-soft);padding-left:14px}
+  .basis{margin-top:14px;border:1px solid var(--line-soft);background:var(--bg-2)}
+  .basis h3{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;color:var(--gold-soft);margin:0;padding:10px 14px;border-bottom:1px solid var(--line-soft);text-transform:uppercase}
+  .hit{padding:11px 14px;border-bottom:1px solid var(--line-soft);font-size:13.5px}
+  .hit:last-child{border-bottom:0}
+  .hit .ht{color:var(--ink);font-weight:600;margin-bottom:3px}
+  .hit .hs{font-family:var(--mono);font-size:10.5px;color:var(--ink-faint);margin-bottom:5px}
+  .hit .hb{color:var(--ink-dim)}
+  .verdict{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .tag{font-family:var(--mono);font-size:10.5px;padding:3px 9px;border:1px solid var(--line);border-radius:3px;color:var(--ink-dim)}
+  .tag.ok{border-color:var(--green);color:var(--ok)}
+  .tag.warn{border-color:var(--gold-soft);color:var(--warn)}
+
+  section{padding:42px 0;border-top:1px solid var(--line-soft)}
+  section h2{font-size:clamp(18px,2.3vw,24px);margin:0 0 8px;font-weight:600}
+  section .sub{color:var(--ink-dim);font-size:14.5px;margin:0 0 24px;max-width:82ch}
+  .tbl-wrap{overflow-x:auto;border:1px solid var(--line-soft)}
+  table{border-collapse:collapse;width:100%;font-size:13px}
+  th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--line-soft)}
+  thead th{background:var(--panel-2);color:var(--gold-soft);font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;white-space:nowrap}
+  td.mono{font-family:var(--mono);font-size:11.5px;font-variant-numeric:tabular-nums}
+  .pass{color:var(--ok)}.fail{color:var(--bad)}
+  .two{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
+  .card{border:1px solid var(--line-soft);background:var(--panel);padding:20px}
+  .card h3{margin:0 0 10px;font-size:15.5px}
+  .card p{margin:0 0 10px;font-size:14px;color:var(--ink-dim)}
+  .card ul{margin:8px 0 0;padding-left:18px;font-size:14px;color:var(--ink-dim)}
+  .card li{margin-bottom:5px}
+  footer{padding:34px 0 52px;color:var(--ink-faint);font-size:12.5px}
+  footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  @media(max-width:640px){.wrap{padding:0 16px}.top-in{padding:11px 16px}.drow{flex-direction:column;gap:2px}.ask-row{flex-wrap:wrap}}
+  </style>
+  </head>
+  <body>
+
+  <div class="top">
+    <div class="top-in">
+      <a class="brand" href="./ask.html">
+        <span class="brand-mark" aria-hidden="true">?</span>
+        <span><b>问史诗 · AI 辅助叙述模块</b><small>ASSISTED NARRATION · MODULE 4</small></span>
+      </a>
+      <nav class="top-nav" aria-label="页面导航">
+        <a href="./console.html">技术控制台</a>
+        <a href="./graph.html">知识图谱</a>
+        <a href="./ask.html" class="active">问史诗</a>
+        <a href="#disclosure">AI 使用披露</a>
+        <a href="#probe">边界测试</a>
+        <a href="./index.html">→ 应用实例</a>
+      </nav>
+    </div>
+  </div>
+
+  <header class="hero">
+    <div class="wrap">
+      <p class="eyebrow">软件作品 · 应用层 · 模块 4</p>
+      <h1>能答的答，<em>不能答的明说不能答</em>。</h1>
+      <p class="lede">
+        文化类项目最怕的不是答得少，而是<strong>编造</strong>。这个模块的检索层完全在本地运行
+        （BM25 简化实现，中文二元字组切分，零依赖，与微信小程序端<strong>同源移植</strong>），
+        只在命中站内已收录、且已标注来源的语料时才作答；依据不足时<strong>拒答</strong>，
+        并把"为什么拒答"一并说明。
+      </p>
+      <p class="lede">
+        大模型环节是<strong>可关闭</strong>的：关闭后本页在浏览器内独立运行，不发出任何网络请求。
+      </p>
+
+      <div class="disclose">
+        <h2>本模块的 AI 使用披露（界面化，不藏在文档里）</h2>
+        <div class="rows">
+          <div class="drow"><span class="dt">本地检索</span><span class="dd">
+            <b>不涉及 AI 生成。</b>BM25 打分与拒答判定是确定性算法，同一问题永远得到同一结果，可离线运行。
+          </span></div>
+          <div class="drow"><span class="dt">段落排序</span><span class="dd">
+            <b>不涉及 AI 生成。</b>按词频、逆文档频率、长度归一化与实体加成计算；每次回答都公开实际命中的段落与得分。
+          </span></div>
+          <div class="drow"><span class="dt">答案组织</span><span class="dd">
+            <b>默认不涉及 AI 生成。</b>由命中段落的原文拼接而成（<code>composeLocalAnswer</code>），
+            不重写、不改写、不补全，因此不存在"模型自由发挥"的空间。
+          </span></div>
+          <div class="drow"><span class="dt">可选的大模型环节</span><span class="dd">
+            如需把候选段落整理成更口语的讲解，可接入语言模型。该环节<b>默认关闭</b>，
+            开启后会在回答下方明确标注，并附所用工具名称、使用环节与人工修改说明。
+          </span></div>
+          <div class="drow"><span class="dt">语料来源</span><span class="dd">
+            32 段语料，来自本项目展馆内容源（<code>src/heroes.js</code> 与页面文案），
+            每段带 <code>source</code> 字段标注出处；语料由 <code>scripts/sync-knowledge.mjs</code>
+            从单一数据源同步，与微信小程序端共用同一套语料与同一套检索实现。
+          </span></div>
+        </div>
+      </div>
+
+      <div class="metrics">
+        <div class="metric"><div class="k">语料段落</div><div class="v">32</div><div class="n">全部带 source 出处</div></div>
+        <div class="metric"><div class="k">索引词项</div><div class="v">1,783</div><div class="n">二元字组 + 英文/数字</div></div>
+        <div class="metric"><div class="k">实体词表</div><div class="v">316</div><div class="n">从标题与标签提取</div></div>
+        <div class="metric"><div class="k">边界测试</div><div class="v ok">47/47</div><div class="n">能答/拒答判定符合预期</div></div>
+        <div class="metric"><div class="k">外部依赖</div><div class="v">0</div><div class="n">无分词库、无向量库、无 CDN</div></div>
+        <div class="metric"><div class="k">网络请求</div><div class="v">0</div><div class="n">默认模式下完全本地</div></div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <div class="ask-box">
+        <div class="ask-head">
+          <span class="t">提问</span>
+          <div class="mode" role="group" aria-label="作答模式">
+            <button id="m-strict" aria-pressed="true">严格模式（本地）</button>
+            <button id="m-online" aria-pressed="false">宽松模式（本地）</button>
+          </div>
+        </div>
+        <div class="ask-row">
+          <input id="q" type="text" placeholder="例如：洪古尔为什么叫雄狮英雄？" autocomplete="off" />
+          <button id="send">问一问</button>
+        </div>
+        <div class="suggest" id="suggest"></div>
+        <div class="thread" id="thread">
+          <div class="turn">
+            <div class="who">系统</div>
+            <div class="answer" style="color:var(--ink-dim)">
+              两种模式的区别只在<strong>拒答闸门的松紧</strong>：严格模式只在高分强命中时作答（宁可少答，不可误答）；
+              宽松模式会把候选段落也交出来给人判断。两种模式的排序算法完全相同。
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <section id="disclosure">
+    <div class="wrap">
+      <h2>为什么把 AI 使用做成界面</h2>
+      <p class="sub">
+        竞赛对 AI 的要求是「如实披露」：使用本身不构成加分或扣分，但未披露或伪造创作过程按纪律处理。
+        把披露做成可交互的界面元素，比写在一份 PDF 里更难含糊。
+      </p>
+      <div class="two">
+        <div class="card">
+          <h3>哪些环节没有 AI</h3>
+          <ul>
+            <li>语料切分与索引构建（确定性）</li>
+            <li>BM25 打分与段落排序（确定性）</li>
+            <li>能答/拒答判定（确定性，四道闸门）</li>
+            <li>答案组织（原文拼接，不重写）</li>
+            <li>72 个蒙古纹样图标（脚本绘制，非生成式）</li>
+            <li>三维模型处理管线（几何算法，非生成式）</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>哪些环节可选使用 AI</h3>
+          <ul>
+            <li>把候选段落整理成更口语的讲解（本页默认关闭）</li>
+            <li>微信小程序端的「江格尔齐」讲解员（该端接入语言模型，界面已标注）</li>
+          </ul>
+          <p style="margin-top:12px">
+            该环节始终：① 只基于本地检索召回并已标注来源的段落；② 不得引入语料之外的事实；
+            ③ 在回答处标注所用工具名称与使用环节。
+          </p>
+        </div>
+        <div class="card">
+          <h3>语料的来源与边界</h3>
+          <p>
+            语料以本项目展馆的原创文案为主，属于<strong>文创演绎与设计说明</strong>，
+            不是史诗原文摘录。因此本模块只回答"展馆收录了什么"，
+            不宣称能回答史诗学问题。
+          </p>
+          <p>
+            涉及具体事实（人名、年代、数目、坐骑等）的提问会被<strong>主动拒绝</strong>——
+            站内资料没有记载，系统不替它编一个答案。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="probe">
+    <div class="wrap">
+      <h2>边界测试</h2>
+      <p class="sub">
+        下面这批问题在<strong>构建期</strong>用同一套代码跑过一遍，用来验证"该答的答、该拒的拒"。
+        这是本模块的可验证性证据，不是宣传语。样本 47 条，通过 47 条。
+        用例集中在 <code>src/ask-probes.js</code>，由 <code>scripts/check-ask.mjs</code> 与构建流程共用——
+        页面显示的通过数和回归测试是<strong>同一份</strong>，不会出现两套口径。
+      </p>
+      <p class="sub" style="margin-bottom:14px">
+        分组通过情况：<code>定义式</code> 17/17　·　<code>可解释</code> 5/5　·　<code>属性已记载</code> 4/4　·　<code>未记载事实</code> 19/19　·　<code>站外</code> 2/2
+      </p>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>组别</th><th>提问</th><th>预期</th><th>实际</th><th>判定</th><th>命中得分</th><th>实词覆盖</th><th>拒答原因</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="mono">定义式</td>
+              <td>江格尔是谁</td>
+              <td class="mono">应答</td>
+              <td class="mono">作答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">24.2</td>
+              <td class="mono">1</td>
+              <td class="mono">—</td>
+            </tr>
+          <tr>
+              <td class="mono">定义式</td>
+              <td>哈日尼敦是谁</td>
+              <td class="mono">应答</td>
+              <td class="mono">作答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">30.4</td>
+              <td class="mono">1</td>
+              <td class="mono">—</td>
+            </tr>
+          <tr>
+              <td class="mono">定义式</td>
+              <td>阿拉坦策吉是谁</td>
+              <td class="mono">应答</td>
+              <td class="mono">作答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">33.1</td>
+              <td class="mono">1</td>
+              <td class="mono">—</td>
+            </tr>
+          <tr>
+              <td class="mono">定义式</td>
+              <td>洪古尔是谁</td>
+              <td class="mono">应答</td>
+              <td class="mono">作答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">23.7</td>
+              <td class="mono">1</td>
+              <td class="mono">—</td>
+            </tr>
+          <tr>
+              <td class="mono">定义式</td>
+              <td>萨布尔是谁</td>
+              <td class="mono">应答</td>
+              <td class="mono">作答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">25.6</td>
+              <td class="mono">1</td>
+              <td class="mono">—</td>
+            </tr>
+          <tr>
+              <td class="mono">定义式</td>
+              <td>明彦是谁</td>
+              <td class="mono">应答</td>
+              <td class="mono">作答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">19.7</td>
+              <td class="mono">1</td>
+              <td class="mono">—</td>
+            </tr>
+          <tr>
+              <td class="mono">定义式</td>
+              <td>萨纳拉是谁</td>
+              <td class="mono">应答</td>
+              <td class="mono">作答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">25.8</td>
+              <td class="mono">1</td>
+              <td class="mono">—</td>
+            </tr>
+          <tr>
+              <td class="mono">定义式</td>
+              <td>古赞贡布是谁</td>
+              <td class="mono">应答</td>
+              <td class="mono">作答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">31.3</td>
+              <td class="mono">1</td>
+              <td class="mono">—</td>
+            </tr>
+          <tr>
+              <td class="mono">定义式</td>
+              <td>哈日吉拉根是谁</td>
+              <td class="mono">应答</td>
+              <td class="mono">作答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">34.3</td>
+              <td class="mono">1</td>
+              <td class="mono">—</td>
+            </tr>
+          <tr>
+              <td class="mono">定义式</td>
+              <td>贺吉拉根是谁</td>
+              <td class="mono">应答</td>
+              <td class="mono">作答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">29.5</td>
+              <td class="mono">1</td>
+              <td class="mono">—</td>
+            </tr>
+          <tr>
+              <td class="mono">定义式</td>
+              <td>纳钦尚胡尔是谁</td>
+              <td class="mono">应答</td>
+              <td class="mono">作答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">37.4</td>
+              <td class="mono">1</td>
+              <td class="mono">—</td>
+            </tr>
+          <tr>
+              <td class="mono">定义式</td>
+              <td>赛力汗塔巴格是谁</td>
+              <td class="mono">应答</td>
+              <td class="mono">作答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">43.3</td>
+              <td class="mono">1</td>
+              <td class="mono">—</td>
+            </tr>
+          <tr>
+              <td class="mono">定义式</td>
+              <td>介绍一下江格尔</td>
+              <td class="mono">应答</td>
+              <td class="mono">作答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">17.2</td>
+              <td class="mono">1</td>
+              <td class="mono">—</td>
+            </tr>
+          <tr>
+              <td class="mono">可解释</td>
+              <td>洪古尔为什么叫雄狮英雄</td>
+              <td class="mono">应答</td>
+              <td class="mono">作答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">50.6</td>
+              <td class="mono">1</td>
+              <td class="mono">—</td>
+            </tr>
+          <tr>
+              <td class="mono">可解释</td>
+              <td>云纹代表什么</td>
+              <td class="mono">应答</td>
+              <td class="mono">作答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">21.6</td>
+              <td class="mono">1</td>
+              <td class="mono">—</td>
+            </tr>
+          <tr>
+              <td class="mono">定义式</td>
+              <td>宝木巴是什么</td>
+              <td class="mono">应答</td>
+              <td class="mono">作答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">21.1</td>
+              <td class="mono">1</td>
+              <td class="mono">—</td>
+            </tr>
+          <tr>
+              <td class="mono">定义式</td>
+              <td>江格尔齐是什么</td>
+              <td class="mono">应答</td>
+              <td class="mono">作答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">26</td>
+              <td class="mono">1</td>
+              <td class="mono">—</td>
+            </tr>
+          <tr>
+              <td class="mono">定义式</td>
+              <td>雄狮英雄是谁</td>
+              <td class="mono">应答</td>
+              <td class="mono">作答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">27.7</td>
+              <td class="mono">1</td>
+              <td class="mono">—</td>
+            </tr>
+          <tr>
+              <td class="mono">定义式</td>
+              <td>蒙古族史诗是什么</td>
+              <td class="mono">应答</td>
+              <td class="mono">作答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">43.1</td>
+              <td class="mono">1</td>
+              <td class="mono">—</td>
+            </tr>
+          <tr>
+              <td class="mono">可解释</td>
+              <td>英雄们为什么守护宝木巴</td>
+              <td class="mono">应答</td>
+              <td class="mono">作答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">20.5</td>
+              <td class="mono">1</td>
+              <td class="mono">—</td>
+            </tr>
+          <tr>
+              <td class="mono">可解释</td>
+              <td>十二英雄是怎么选的</td>
+              <td class="mono">应答</td>
+              <td class="mono">作答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">18.4</td>
+              <td class="mono">1</td>
+              <td class="mono">—</td>
+            </tr>
+          <tr>
+              <td class="mono">可解释</td>
+              <td>云纹为什么画在袍摆上</td>
+              <td class="mono">应答</td>
+              <td class="mono">作答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">38.5</td>
+              <td class="mono">1</td>
+              <td class="mono">—</td>
+            </tr>
+          <tr>
+              <td class="mono">属性已记载</td>
+              <td>萨布尔的机械义臂是什么</td>
+              <td class="mono">应答</td>
+              <td class="mono">作答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">40.8</td>
+              <td class="mono">1</td>
+              <td class="mono">—</td>
+            </tr>
+          <tr>
+              <td class="mono">属性已记载</td>
+              <td>明彦的马头琴是什么</td>
+              <td class="mono">应答</td>
+              <td class="mono">作答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">44.5</td>
+              <td class="mono">1</td>
+              <td class="mono">—</td>
+            </tr>
+          <tr>
+              <td class="mono">属性已记载</td>
+              <td>古赞贡布的酒壶是什么</td>
+              <td class="mono">应答</td>
+              <td class="mono">作答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">50.9</td>
+              <td class="mono">1</td>
+              <td class="mono">—</td>
+            </tr>
+          <tr>
+              <td class="mono">属性已记载</td>
+              <td>洪古尔的武器是什么</td>
+              <td class="mono">应答</td>
+              <td class="mono">作答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">27.6</td>
+              <td class="mono">1</td>
+              <td class="mono">—</td>
+            </tr>
+          <tr>
+              <td class="mono">未记载事实</td>
+              <td>江格尔的坐骑是什么</td>
+              <td class="mono">应拒</td>
+              <td class="mono">拒答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">25.6</td>
+              <td class="mono">1</td>
+              <td class="mono">question_terms_missing</td>
+            </tr>
+          <tr>
+              <td class="mono">未记载事实</td>
+              <td>哈日尼敦的坐骑是什么</td>
+              <td class="mono">应拒</td>
+              <td class="mono">拒答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">30.4</td>
+              <td class="mono">1</td>
+              <td class="mono">question_terms_missing</td>
+            </tr>
+          <tr>
+              <td class="mono">未记载事实</td>
+              <td>阿拉坦策吉的坐骑是什么</td>
+              <td class="mono">应拒</td>
+              <td class="mono">拒答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">33.1</td>
+              <td class="mono">1</td>
+              <td class="mono">question_terms_missing</td>
+            </tr>
+          <tr>
+              <td class="mono">未记载事实</td>
+              <td>洪古尔的坐骑是什么</td>
+              <td class="mono">应拒</td>
+              <td class="mono">拒答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">23.7</td>
+              <td class="mono">1</td>
+              <td class="mono">question_terms_missing</td>
+            </tr>
+          <tr>
+              <td class="mono">未记载事实</td>
+              <td>萨布尔的坐骑是什么</td>
+              <td class="mono">应拒</td>
+              <td class="mono">拒答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">25.6</td>
+              <td class="mono">1</td>
+              <td class="mono">question_terms_missing</td>
+            </tr>
+          <tr>
+              <td class="mono">未记载事实</td>
+              <td>明彦的坐骑是什么</td>
+              <td class="mono">应拒</td>
+              <td class="mono">拒答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">19.7</td>
+              <td class="mono">1</td>
+              <td class="mono">question_terms_missing</td>
+            </tr>
+          <tr>
+              <td class="mono">未记载事实</td>
+              <td>萨纳拉的坐骑是什么</td>
+              <td class="mono">应拒</td>
+              <td class="mono">拒答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">25.8</td>
+              <td class="mono">1</td>
+              <td class="mono">question_terms_missing</td>
+            </tr>
+          <tr>
+              <td class="mono">未记载事实</td>
+              <td>古赞贡布的坐骑是什么</td>
+              <td class="mono">应拒</td>
+              <td class="mono">拒答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">31.3</td>
+              <td class="mono">1</td>
+              <td class="mono">question_terms_missing</td>
+            </tr>
+          <tr>
+              <td class="mono">未记载事实</td>
+              <td>哈日吉拉根的坐骑是什么</td>
+              <td class="mono">应拒</td>
+              <td class="mono">拒答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">34.3</td>
+              <td class="mono">1</td>
+              <td class="mono">question_terms_missing</td>
+            </tr>
+          <tr>
+              <td class="mono">未记载事实</td>
+              <td>贺吉拉根的坐骑是什么</td>
+              <td class="mono">应拒</td>
+              <td class="mono">拒答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">29.5</td>
+              <td class="mono">1</td>
+              <td class="mono">question_terms_missing</td>
+            </tr>
+          <tr>
+              <td class="mono">未记载事实</td>
+              <td>纳钦尚胡尔的坐骑是什么</td>
+              <td class="mono">应拒</td>
+              <td class="mono">拒答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">37.4</td>
+              <td class="mono">1</td>
+              <td class="mono">question_terms_missing</td>
+            </tr>
+          <tr>
+              <td class="mono">未记载事实</td>
+              <td>赛力汗塔巴格的坐骑是什么</td>
+              <td class="mono">应拒</td>
+              <td class="mono">拒答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">43.3</td>
+              <td class="mono">1</td>
+              <td class="mono">question_terms_missing</td>
+            </tr>
+          <tr>
+              <td class="mono">未记载事实</td>
+              <td>洪古尔的父亲是谁</td>
+              <td class="mono">应拒</td>
+              <td class="mono">拒答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">23.7</td>
+              <td class="mono">1</td>
+              <td class="mono">question_terms_missing</td>
+            </tr>
+          <tr>
+              <td class="mono">未记载事实</td>
+              <td>江格尔的妻子是谁</td>
+              <td class="mono">应拒</td>
+              <td class="mono">拒答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">20.3</td>
+              <td class="mono">1</td>
+              <td class="mono">question_terms_missing</td>
+            </tr>
+          <tr>
+              <td class="mono">未记载事实</td>
+              <td>洪古尔的儿子叫什么</td>
+              <td class="mono">应拒</td>
+              <td class="mono">拒答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">23.7</td>
+              <td class="mono">1</td>
+              <td class="mono">question_terms_missing</td>
+            </tr>
+          <tr>
+              <td class="mono">未记载事实</td>
+              <td>洪古尔是谁的儿子</td>
+              <td class="mono">应拒</td>
+              <td class="mono">拒答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">23.7</td>
+              <td class="mono">1</td>
+              <td class="mono">question_terms_missing</td>
+            </tr>
+          <tr>
+              <td class="mono">未记载事实</td>
+              <td>江格尔的出生地在哪里</td>
+              <td class="mono">应拒</td>
+              <td class="mono">拒答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">25.7</td>
+              <td class="mono">1</td>
+              <td class="mono">question_terms_missing</td>
+            </tr>
+          <tr>
+              <td class="mono">未记载事实</td>
+              <td>宝木巴在哪个省</td>
+              <td class="mono">应拒</td>
+              <td class="mono">拒答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">18.9</td>
+              <td class="mono">1</td>
+              <td class="mono">question_terms_missing</td>
+            </tr>
+          <tr>
+              <td class="mono">未记载事实</td>
+              <td>江格尔一共有多少章</td>
+              <td class="mono">应拒</td>
+              <td class="mono">拒答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">17.2</td>
+              <td class="mono">1</td>
+              <td class="mono">question_terms_missing</td>
+            </tr>
+          <tr>
+              <td class="mono">站外</td>
+              <td>今天天气怎么样</td>
+              <td class="mono">应拒</td>
+              <td class="mono">拒答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">4.5</td>
+              <td class="mono">1</td>
+              <td class="mono">low_score</td>
+            </tr>
+          <tr>
+              <td class="mono">站外</td>
+              <td>怎么学习编程</td>
+              <td class="mono">应拒</td>
+              <td class="mono">拒答</td>
+              <td class="mono pass">✓ 符合</td>
+              <td class="mono">4.5</td>
+              <td class="mono">1</td>
+              <td class="mono">low_score</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="sub" style="margin-top:18px">
+        <strong>已知局限：</strong>拒答判定基于词频与词覆盖，<strong>不是语义理解</strong>。
+        实测发现站外问题「宝木巴在哪个省」的实词覆盖反而高于站内问题「云纹为什么画在袍摆上」——
+        因为"语料里有没有这个事实"是语义问题。因此本模块的分工是：
+        本地检索负责<strong>召回</strong>，是否足以作答在有模型时交给模型，无模型时用严格模式兜底。
+        这一取舍写在代码注释里（<code>src/retrieval-core.js</code> 的 <code>decide()</code>）。
+      </p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <span>《江格尔》十二英雄——基于手写 WebGL 管线的史诗数字展陈交互系统 · AI 辅助叙述模块</span>
+      <span>检索实现：<code>src/retrieval-core.js</code>（与小程序端同源）　·　语料同步：<code>scripts/sync-knowledge.mjs</code></span>
+    </div>
+  </footer>
+
+  <!-- 语料**构建期内联**，不做运行时 fetch。
+       为什么必须内联：这个页面曾是本站唯一在运行时 fetch 数据的页面，
+       而静态托管在路径不存在时普遍会回退返回 index.html（HTTP 200 + text/html）。
+       于是 fetch 不会失败在状态码上，而是失败在 r.json() 解析上——
+       AI 模块会**静默变空**，页面上却还写着"可离线运行"。
+       内联之后没有网络请求，这类回退行为再也伤不到它，离线也不再依赖预缓存命中。 -->
+  <script type="application/json" id="corpus-data">{"chunks":[{"id":"overview-epic","section":"overview","title":"《江格尔》是什么","source":"展馆 · 走进江格尔","tags":["江格尔","史诗","蒙古族","非遗","什么是","江格尔是什么","这部史诗","江格尔讲什么"],"text":"《江格尔》是蒙古族世代传唱的英雄史诗。它讲述江格尔与勇士们守护理想家园宝木巴的故事，也寄托着人们对和平、团结与美好生活的向往。史诗中的冒险与交锋，承载着人们对和平生活的期待。本展馆以数字艺术与文创设计，让这份口耳相传的文化记忆被更多人看见。"},{"id":"overview-jangar-hero","section":"overview","title":"江格尔：史诗的中心人物","source":"展馆 · 走进江格尔 / 史诗长卷 贰","tags":["江格尔是谁","主角","可汗","圣主","中心人物","人物","圣主可汗","首领","老大","主人翁","核心人物"],"text":"江格尔是《江格尔》史诗的中心人物，本馆图鉴中列为第一位，称号「圣主可汗」。围绕他与勇士们展开的故事，把个人的勇武与共同家园的命运联系起来：英雄的价值既在于面对艰难时的胆识，也在于对伙伴与家园的担当。请注意区分：江格尔是史诗里的人物；「江格尔齐」是对演唱这部史诗的人的称呼，两者不是一回事。"},{"id":"overview-bomba","section":"overview","title":"宝木巴 · 理想家园","source":"展馆 · 史诗长卷 壹「理想之地」","tags":["宝木巴","家园","理想","圣地","地名","理想国","理想家园","乌托邦","世外桃源","草原上的理想国"," paradise"],"text":"宝木巴是《江格尔》中的理想家园，也是史诗里的圣地。史诗以富于想象的笔触描绘它的丰饶与美好：人们向往安宁的生活、和睦的伙伴，以及不被侵扰的土地。理解这个世界，可以先把目光从战斗移向家园——勇士远行、迎战与归来的意义，最终都落在“守护”二字上。家园不仅是故事的起点，也是英雄行动的理由。"},{"id":"hero-jiangger","section":"heroes","title":"江格尔 · 圣主可汗","source":"展馆 · 图鉴第 01 位（文创演绎）","tags":["江格尔","jiangger","圣主可汗","圣主可汗","可汗","首领","老大","主心骨","带头的人","圣主","传统蒙古袍云纹刺绣","蒙古族传统盔帽设计","松石腰带细节","圣主权杖配件","专属宝座底座","可拆卸披风设计"],"text":"宝木巴圣地的守护者，十二英雄的领袖，蒙古族人民心中'团结、正义、守护'的精神象征。本馆文创设计要点：传统蒙古袍云纹刺绣、蒙古族传统盔帽设计、松石腰带细节、圣主权杖配件、专属宝座底座、可拆卸披风设计。在本馆的十二英雄组织中，江格尔属特别典藏。十二英雄是本项目的展示组织方式，史诗本身拥有丰富的人物与不同传承版本，图鉴不能替代完整的史诗。"},{"id":"hero-harinidun","section":"heroes","title":"哈日尼敦 · 牧马英雄","source":"展馆 · 图鉴第 02 位（文创演绎）","tags":["哈日尼敦","harinidun","牧马英雄","牧马英雄","养马的","骑马的","马倌","马术","套马","骑乘造型设计","骏马动态姿态","皮质护具纹理","弓箭配件套装","草原场景底座","可替换箭头配件"],"text":"骑术精湛、箭法如神，草原上最懂马语的勇士。本馆文创设计要点：骑乘造型设计、骏马动态姿态、皮质护具纹理、弓箭配件套装、草原场景底座、可替换箭头配件。在本馆的十二英雄组织中，哈日尼敦属特别典藏。十二英雄是本项目的展示组织方式，史诗本身拥有丰富的人物与不同传承版本，图鉴不能替代完整的史诗。"},{"id":"hero-alatancheji","section":"heroes","title":"阿拉坦策吉 · 金胸智者","source":"展馆 · 图鉴第 03 位（文创演绎）","tags":["阿拉坦策吉","alatancheji","金胸智者","金胸智者","智囊","军师","谋士","出主意的","军师型","最聪明的","智者","参谋","星纹长袍设计","太极图案装饰","金色法杖配件","智慧卷轴道具","学者底座","星空披风特效"],"text":"江格尔最信赖的首席谋臣，通晓天地、智计无双。本馆文创设计要点：星纹长袍设计、太极图案装饰、金色法杖配件、智慧卷轴道具、学者底座、星空披风特效。在本馆的十二英雄组织中，阿拉坦策吉属英雄群像。十二英雄是本项目的展示组织方式，史诗本身拥有丰富的人物与不同传承版本，图鉴不能替代完整的史诗。"},{"id":"hero-hongguer","section":"heroes","title":"洪古尔 · 雄狮英雄","source":"展馆 · 图鉴第 04 位（文创演绎）","tags":["洪古尔","hongguer","雄狮英雄","雄狮英雄","先锋","猛将","拿斧头的","双刃斧","最能打的","狮子","前锋","勇士","红色战甲设计","雄狮皮毛披风","双刃斧武器","战斗姿态造型","战场底座","可动关节设计"],"text":"江格尔最信赖的先锋勇士，骁勇善战、赤胆忠心。本馆文创设计要点：红色战甲设计、雄狮皮毛披风、双刃斧武器、战斗姿态造型、战场底座、可动关节设计。在本馆的十二英雄组织中，洪古尔属英雄群像。十二英雄是本项目的展示组织方式，史诗本身拥有丰富的人物与不同传承版本，图鉴不能替代完整的史诗。"},{"id":"hero-saber","section":"heroes","title":"萨布尔 · 铁臂力士","source":"展馆 · 图鉴第 05 位（文创演绎）","tags":["萨布尔","saber","铁臂力士","铁臂力士","力士","大力士","力气最大的","铁臂","机械臂","肌肉","机械义臂设计","重型装甲","力量感造型","金属链条配件","工业风底座","可替换手掌配件"],"text":"力大无穷、勇猛无双的铁臂力士，双臂如铁。本馆文创设计要点：机械义臂设计、重型装甲、力量感造型、金属链条配件、工业风底座、可替换手掌配件。在本馆的十二英雄组织中，萨布尔属英雄群像。十二英雄是本项目的展示组织方式，史诗本身拥有丰富的人物与不同传承版本，图鉴不能替代完整的史诗。"},{"id":"hero-mingyan","section":"heroes","title":"明彦 · 美男子 · 红色兔骏马主","source":"展馆 · 图鉴第 06 位（文创演绎）","tags":["明彦","mingyan","美男子","红色兔骏马主","美男子","帅哥","马头琴","红袍","红色衣袍","英俊","雅士","美男","红色蒙古袍设计","马头琴配件","优雅姿态","骏马造型底座","丝绸质感涂装","披风与腰饰细节"],"text":"俊朗优雅、风度翩翩的草原雅士，以仪表与琴艺著称，是宝木巴宴席上最受瞩目的一位。本馆文创设计要点：红色蒙古袍设计、马头琴配件、优雅姿态、骏马造型底座、丝绸质感涂装、披风与腰饰细节。在本馆的十二英雄组织中，明彦属英雄群像。十二英雄是本项目的展示组织方式，史诗本身拥有丰富的人物与不同传承版本，图鉴不能替代完整的史诗。"},{"id":"hero-sanala","section":"heroes","title":"萨纳拉 · 刀斧手","source":"展馆 · 图鉴第 07 位（文创演绎）","tags":["萨纳拉","sanala","刀斧手","刀斧手","双刀","拿刀的","刀手","近战","防线","战斗铠甲设计","双刀武器","战斗姿态","战场烟雾特效","战术底座","可替换武器配件"],"text":"勇猛果敢、悍不畏死的刀斧手，是宝木巴圣地最可靠的防线。本馆文创设计要点：战斗铠甲设计、双刀武器、战斗姿态、战场烟雾特效、战术底座、可替换武器配件。在本馆的十二英雄组织中，萨纳拉属英雄群像。十二英雄是本项目的展示组织方式，史诗本身拥有丰富的人物与不同传承版本，图鉴不能替代完整的史诗。"},{"id":"hero-guzangongbu","section":"heroes","title":"古赞贡布 · 大肚子英雄","source":"展馆 · 图鉴第 08 位（文创演绎）","tags":["古赞贡布","guzangongbu","大肚子英雄","大肚子英雄","大肚子","胖英雄","酒壶","爱笑的","厨子","会吃的","圆润造型设计","开怀大笑表情","酒壶配件","美食元素","欢乐底座","可替换表情配件"],"text":"豁达开朗、力大无穷的大肚子英雄，憨态可掬却勇猛过人。本馆文创设计要点：圆润造型设计、开怀大笑表情、酒壶配件、美食元素、欢乐底座、可替换表情配件。在本馆的十二英雄组织中，古赞贡布属英雄群像。十二英雄是本项目的展示组织方式，史诗本身拥有丰富的人物与不同传承版本，图鉴不能替代完整的史诗。"},{"id":"hero-harijilagen","section":"heroes","title":"哈日吉拉根 · 神箭手","source":"展馆 · 图鉴第 09 位（文创演绎）","tags":["哈日吉拉根","harijilagen","神箭手","神箭手","射手","弓箭手","射箭的","百步穿杨","箭法好","猎人","弓箭手造型","皮革护具","弓箭配件","瞄准姿态","草原瞭望台底座","可替换箭筒配件"],"text":"箭无虚发、百步穿杨的神箭手，是宝木巴最可靠的守护者。本馆文创设计要点：弓箭手造型、皮革护具、弓箭配件、瞄准姿态、草原瞭望台底座、可替换箭筒配件。在本馆的十二英雄组织中，哈日吉拉根属英雄群像。十二英雄是本项目的展示组织方式，史诗本身拥有丰富的人物与不同传承版本，图鉴不能替代完整的史诗。"},{"id":"hero-hejilagen","section":"heroes","title":"贺吉拉根 · 铁嘴法官","source":"展馆 · 图鉴第 10 位（文创演绎）","tags":["贺吉拉根","hejilagen","铁嘴法官","铁嘴法官","法官","判官","裁决","讲理的","法槌","律师","法官长袍设计","法典卷轴","公正天平配件","严肃表情","法庭底座","可替换法槌配件"],"text":"明辨是非、舌辩无双的铁嘴法官，是草原上最受信赖的裁决者。本馆文创设计要点：法官长袍设计、法典卷轴、公正天平配件、严肃表情、法庭底座、可替换法槌配件。在本馆的十二英雄组织中，贺吉拉根属英雄群像。十二英雄是本项目的展示组织方式，史诗本身拥有丰富的人物与不同传承版本，图鉴不能替代完整的史诗。"},{"id":"hero-naqinshanghuer","section":"heroes","title":"纳钦尚胡尔 · 旗手 · 雄鹰","source":"展馆 · 图鉴第 11 位（文创演绎）","tags":["纳钦尚胡尔","naqinshanghuer","旗手","雄鹰","旗手","雄鹰","举旗的","战旗","鹰","领头冲锋","旗手造型","战旗配件","雄鹰图腾","旗帜飘动效果","高地底座","可替换旗帜配件"],"text":"草原上的先锋号角，手持战旗，以无畏勇气引领族人前进。本馆文创设计要点：旗手造型、战旗配件、雄鹰图腾、旗帜飘动效果、高地底座、可替换旗帜配件。在本馆的十二英雄组织中，纳钦尚胡尔属英雄群像。十二英雄是本项目的展示组织方式，史诗本身拥有丰富的人物与不同传承版本，图鉴不能替代完整的史诗。"},{"id":"hero-sailihantabage","section":"heroes","title":"赛力汗塔巴格 · 飞毛腿","source":"展馆 · 图鉴第 12 位（文创演绎）","tags":["赛力汗塔巴格","sailihantabage","飞毛腿","飞毛腿","跑得最快的","善跑","速跑","长跑","跑腿","奔跑姿态","轻便装束","速度线特效","动态造型","跑道底座","可替换姿势配件"],"text":"风驰电掣的飞毛腿，身形矫健、步履如飞。本馆文创设计要点：奔跑姿态、轻便装束、速度线特效、动态造型、跑道底座、可替换姿势配件。在本馆的十二英雄组织中，赛力汗塔巴格属英雄群像。十二英雄是本项目的展示组织方式，史诗本身拥有丰富的人物与不同传承版本，图鉴不能替代完整的史诗。"},{"id":"tradition-jangarchi","section":"tradition","title":"江格尔齐是谁","source":"展馆 · 口头传承 01「听」","tags":["江格尔齐","演唱者","吟诵","说唱","传承人","怎么唱","唱歌的人","唱史诗的人","说书人","民间艺人","歌手"],"text":"“江格尔齐”是对《江格尔》演唱者的称呼。史诗通过富有节奏的吟诵与演唱，让人物、场景和情绪在听众面前展开。声音与现场的交流，是阅读文字之外的重要体验。史诗在江格尔齐的吟诵中流传，如今人们以数字艺术与文创设计，让这份口耳相传的文化记忆被更多人看见。"},{"id":"tradition-oral","section":"tradition","title":"口传心授如何延续","source":"展馆 · 口头传承 02「记」","tags":["口传","记忆","心授","版本","地方版本","传承","口耳相传","口头流传","师傅带徒弟","为什么有不同版本"],"text":"口头传承依托人的记忆、学习和实践。传唱者在讲述中延续故事，也使史诗呈现不同的地方版本与表达方式。理解这份多样性，是尊重口头文学的重要一步。因此不同传承与整理本的叙事、称谓和篇幅会有所差异，阅读时保留各自语境比追求唯一版本更重要。"},{"id":"tradition-digital","section":"tradition","title":"从记录到新的相遇","source":"展馆 · 口头传承 03「续」","tags":["记录","录音","数字","传播","技术","保存"],"text":"文字整理、录音录像与数字展示，为接触史诗打开了更多入口。技术可以帮助保存与传播，传承者、听众和真实的文化生活则始终是故事的核心。本展馆用可交互的三维形象与数字阅读，提供一个新的相遇入口，而不是替代原文与真实传承。"},{"id":"chapter-panel-0","section":"reading","title":"壹 · 关于家园","source":"展馆 · 史诗长卷 壹","tags":["壹 · 关于家园"],"text":"壹READING 01 · 关于家园英雄为何出发？ 因为有值得守护的地方。宝木巴是《江格尔》中的理想家园。史诗以富于想象的笔触描绘它的丰饶与美好：人们向往安宁的生活、和睦的伙伴，以及不被侵扰的土地。理解这个世界，可以先把目光从战斗移向家园。勇士远行、迎战与归来的意义，最终都落在“守护”二字上。家园不仅是故事的起点，也是英雄行动的理由。带着问题阅读如果你生活在宝木巴，最想守护的会是什么？回看史诗背景 ↗"},{"id":"chapter-panel-1","section":"reading","title":"贰 · 关于勇气","source":"展馆 · 史诗长卷 贰","tags":["贰 · 关于勇气"],"text":"贰READING 02 · 关于勇气英雄的力量， 也来自肩上的责任。江格尔是史诗的重要中心人物。围绕他与勇士们展开的故事，将个人的勇武与共同家园的命运联系起来。英雄的价值，既在于面对艰难时的胆识，也在于对伙伴与家园的担当。欣赏这些人物时，不妨留意行动背后的选择：为什么迎战，为谁冒险，又如何面对困难？这让古老故事中的勇气，与今天的生活产生联系。带着问题阅读你认为勇气只是不害怕，还是害怕时依然作出选择？近距离看看江格尔 ↗"},{"id":"chapter-panel-2","section":"reading","title":"叁 · 关于伙伴","source":"展馆 · 史诗长卷 叁","tags":["叁 · 关于伙伴"],"text":"叁READING 03 · 关于伙伴一位英雄的勇敢， 一群伙伴的力量。《江格尔》的魅力不只在一个人物。江格尔、洪古尔、阿拉坦策吉等形象，共同构成丰富的英雄群像。不同人物的勇力、智慧与性格，让守护家园成为彼此协作的事业。本展馆选取十二位角色进行文创演绎，方便从人物进入史诗。“十二英雄”是本项目的展示组织方式，并不意味着史诗只包含十二位英雄或只有十二个故事。带着问题阅读如果组成一支队伍，你希望伙伴拥有怎样的不同长处？认识十二位伙伴 ↗"},{"id":"chapter-panel-3","section":"reading","title":"肆 · 关于和平","source":"展馆 · 史诗长卷 肆","tags":["肆 · 关于和平"],"text":"肆READING 04 · 关于和平远行的终点， 是安宁的日常。史诗中的冒险与交锋，承载着人们对和平生活的期待。英雄的光芒，并不只存在于惊险时刻；回到家园、与伙伴相聚，同样是理解故事的重要线索。把阅读停留在胜负之外，便能看见史诗与日常生活的关系：珍视共同生活的人，理解团结的意义，也思考怎样让自己的家园变得更好。带着问题阅读今天，我们可以用什么方式延续“守护”的精神？看看故事如何被传下去 ↗"},{"id":"motif-cloud","section":"motif","title":"云纹：把流动的云留在衣角","source":"展馆 · 纹样解读 01","tags":["云纹","纹样","袍摆","曲线","刺绣","衣服","花纹","衣服上的花纹","图案","花样","装饰"],"text":"云纹由弧线、回转与连绵的节奏构成，让静态服饰也有流动感。本馆以云纹装饰袍摆，将柔和的曲线与角色的英雄气质并置。上方纹样为本站绘制的设计示意，服饰与色彩说明针对本系列文创形象，不代表所有蒙古族地区与时期的统一样式。"},{"id":"motif-border","section":"motif","title":"边饰：一圈秩序勾勒衣袍","source":"展馆 · 纹样解读 02","tags":["边饰","几何","袖口","衣襟","腰带","边界","服饰"],"text":"重复的几何纹饰，让袖口、衣襟和腰带拥有清晰的边界。观察造型时，留意它们如何引导视线，并让角色轮廓更鲜明。"},{"id":"motif-colors","section":"motif","title":"色彩：金色的光，松石的蓝","source":"展馆 · 纹样解读 03","tags":["色彩","金色","松石蓝","深红","草原绿","配色","颜色","用了哪几种颜色","色调","色彩搭配"],"text":"本系列以金色、松石蓝、深红与草原绿构建视觉语言。色彩用于区分人物个性，也让金属、织物与饰物在画面中形成对比。"},{"id":"quiz-bomba","section":"quiz","title":"史诗中的理想家园叫什么","source":"展馆 · 草原小问答","tags":["答题","问答","叫什么","家园名"],"text":"宝木巴是《江格尔》中承载和平与美好生活向往的理想家园。英雄们的行动，与守护这个家园紧密相连。"},{"id":"quiz-jangarchi","section":"quiz","title":"“江格尔齐”指的是谁","source":"展馆 · 草原小问答","tags":["答题","江格尔齐是谁","演唱者"],"text":"“江格尔齐”是《江格尔》演唱者的称呼。他们通过吟诵与演唱，让史诗在口头传承中延续。"},{"id":"quiz-twelve","section":"quiz","title":"怎样理解展馆里的“十二英雄”","source":"展馆 · 草原小问答","tags":["答题","十二英雄","几个人物","章回","只有十二个吗","是不是只有十二个","一共几个人","十二位","多少位英雄","多少英雄","几位英雄","32","32位虎将","六千","6000","勇士"],"text":"十二英雄是本项目的展示组织方式。史诗拥有丰富的人物与不同传承版本，文创图鉴不能替代完整的史诗。“十二”并非史诗人物总数，也不代表只有十二个故事。按史诗的叙述，江格尔汗率领的是十二位英雄、三十二位虎将、六千多名勇士——十二位是其中最亲近的一层，本项目图鉴收的就是这一层。"},{"id":"visit-model","section":"visit","title":"怎样看清模型的服饰细节","source":"展馆 · 参观说明","tags":["模型","三维","怎么操作","旋转","缩放","细节","转一圈","看背面","放大","怎么转","怎么看","操作说明","换角度"],"text":"拖动模型可查看正面、侧面与背面；滚轮或手机双指可缩放。点击展厅右上角的放大按钮，再靠近看看衣襟、腰带与配饰。键盘方向键也能转动模型，按 0 可恢复初始视角。"},{"id":"visit-favorites","section":"visit","title":"收藏英雄存在哪里","source":"展馆 · 参观说明","tags":["收藏","书签","保存","同步","换手机","还在吗","存哪里","会丢吗","收藏夹"],"text":"在网页端点击人物卡片右上角的书签，再切换到“我的收藏”即可查看。收藏保存在当前设备的浏览器中；清理浏览器数据或更换设备后，不会自动同步。"},{"id":"visit-disclaimer","section":"visit","title":"哪些是本项目的艺术演绎","source":"展馆 · 参观说明（重要边界）","tags":["演绎","文创","是不是传统","真实","造型","卡通","动漫","美化","真实存在吗","历史原型","是不是真的"],"text":"图鉴里的角色是基于《江格尔》人物创作的当代文创设计。Q 版比例、服饰搭配、道具与部分称号属于本项目的艺术演绎。阅读史诗时，建议结合不同整理本与传承者的讲述理解人物。纹样为设计示意，不代表所有蒙古族地区与时期的统一样式。史诗人物总数远不止十二位，本馆的十二英雄是展示组织方式。"},{"id":"visit-quiz-note","section":"visit","title":"文化问答怎么玩","source":"展馆 · 探索问答","tags":["问答","答题","得分","题"],"text":"展馆的文化问答共三道题，围绕宝木巴、江格尔齐与文创群像展开，答错也无需担心，每个答案都能回到对应章节继续阅读。"}]}</script>
+
+  <script type="module">
+  import { buildIndex, decide, composeLocalAnswer, REFUSAL_TEXT } from './src/retrieval-core.js';
+
+  /* 初始化全部包在 try/catch 里：任何一步失败都要在页面上**显式说明**，
+     而不是留一个看起来正常、实际点不动的空界面。 */
+  let index;
+  let initError = null;
+  try {
+    const node = document.getElementById('corpus-data');
+    if (!node) throw new Error('页面缺少内联语料节点');
+    const corpus = JSON.parse(node.textContent);
+    if (!corpus || !Array.isArray(corpus.chunks) || !corpus.chunks.length) {
+      throw new Error('语料为空');
+    }
+    index = buildIndex(corpus.chunks);
+  } catch (error) {
+    initError = error;
+    console.error('[问史诗] 语料初始化失败：', error);
+  }
+
+  if (initError) {
+    const thread = document.getElementById('thread');
+    thread.innerHTML = '<div class="turn"><div class="who">系统</div>'
+      + '<div class="answer refused">检索模块未能初始化，本页暂时无法作答。<br>'
+      + '原因：' + String(initError.message || initError).replace(/[<>&]/g, '')
+      + '<br>这不是"没有资料"，而是页面资源异常；请刷新页面重试。</div></div>';
+    const send = document.getElementById('send');
+    if (send) { send.disabled = true; send.textContent = '暂不可用'; }
+    const input = document.getElementById('q');
+    if (input) { input.disabled = true; input.placeholder = '检索模块未就绪'; }
+    throw initError;
+  }
+
+  const MODE_LABEL = { strict: '严格模式', online: '宽松模式' };
+  let mode = 'strict';
+
+  const SUGGESTIONS = [
+    '介绍一下江格尔',
+    '洪古尔为什么叫雄狮英雄',
+    '云纹代表什么',
+    '宝木巴是什么',
+    '阿拉坦策吉是谁',
+    '江格尔齐是什么',
+    '宝木巴在哪个省',
+    '洪古尔的父亲是谁',
+  ];
+
+  const qEl = document.getElementById('q');
+  const thread = document.getElementById('thread');
+  const suggest = document.getElementById('suggest');
+
+  SUGGESTIONS.forEach(text => {
+    const b = document.createElement('button');
+    b.className = 'chip';
+    b.type = 'button';
+    b.textContent = text;
+    b.addEventListener('click', () => { qEl.value = text; ask(); });
+    suggest.appendChild(b);
+  });
+
+  document.getElementById('m-strict').addEventListener('click', () => setMode('strict'));
+  document.getElementById('m-online').addEventListener('click', () => setMode('online'));
+  function setMode(next) {
+    mode = next;
+    document.getElementById('m-strict').setAttribute('aria-pressed', String(mode === 'strict'));
+    document.getElementById('m-online').setAttribute('aria-pressed', String(mode === 'online'));
+  }
+
+  document.getElementById('send').addEventListener('click', ask);
+  qEl.addEventListener('keydown', event => { if (event.key === 'Enter') ask(); });
+
+  function esc(text) {
+    return String(text).replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
+  }
+
+  function ask() {
+    const question = qEl.value.trim();
+    if (!question) return;
+
+    const verdict = decide(index, question, { mode });
+    const turn = document.createElement('div');
+    turn.className = 'turn';
+
+    let body = '';
+    let refused = false;
+    if (verdict.confident) {
+      body = composeLocalAnswer(verdict.hits);
+    } else {
+      refused = true;
+      body = REFUSAL_TEXT[verdict.reason] || '站内资料依据不足，本系统不对此作答。';
+    }
+
+    let html = '';
+    html += '<div class="who">提问</div>';
+    html += '<div class="qtext">' + esc(question) + '</div>';
+    html += '<div class="who">' + (mode === 'strict' ? '严格模式' : '宽松模式') + ' · 本地检索作答</div>';
+    html += '<div class="answer' + (refused ? ' refused' : '') + '">' + esc(body) + '</div>';
+
+    html += '<div class="verdict">';
+    html += '<span class="tag ' + (verdict.confident ? 'ok' : 'warn') + '">' + (verdict.confident ? '依据充足' : '依据不足 → 拒答') + '</span>';
+    html += '<span class="tag">最高得分 ' + verdict.topScore.toFixed(1) + '</span>';
+    html += '<span class="tag">实词覆盖 ' + (verdict.coverage * 100).toFixed(0) + '%</span>';
+    html += '<span class="tag">主题覆盖 ' + (verdict.topicCoverage * 100).toFixed(0) + '%</span>';
+    if (verdict.factSeeking) html += '<span class="tag warn">识别为索要具体事实</span>';
+    if (verdict.reason) html += '<span class="tag warn">' + esc(verdict.reason) + '</span>';
+    html += '<span class="tag">AI 生成环节：未启用</span>';
+    html += '</div>';
+
+    if (verdict.hits.length) {
+      html += '<div class="basis"><h3>实际命中的语料段落（' + verdict.hits.length + '）</h3>';
+      verdict.hits.forEach((hit, i) => {
+        html += '<div class="hit">'
+          + '<div class="ht">' + (i + 1) + '. ' + esc(hit.chunk.title) + '</div>'
+          + '<div class="hs">得分 ' + hit.score.toFixed(1) + '　·　出处：' + esc(hit.chunk.source || '未标注') + '</div>'
+          + '<div class="hb">' + esc(hit.chunk.text) + '</div>'
+          + '</div>';
+      });
+      html += '</div>';
+    } else {
+      html += '<div class="basis"><h3>命中的语料段落</h3><div class="hit"><div class="hb">'
+        + '没有命中任何段落。这通常意味着问题涉及的词在站内语料中不存在。'
+        + '</div></div></div>';
+    }
+
+    turn.innerHTML = html;
+    thread.insertBefore(turn, thread.firstChild);
+    qEl.value = '';
+  }
+
+  qEl.focus();
+  </script>
+  </body>
+  </html>
+  

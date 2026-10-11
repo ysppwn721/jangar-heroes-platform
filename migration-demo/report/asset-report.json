@@ -1,0 +1,106 @@
+{
+  "generatedAt": "2026-10-11T12:10:42.128Z",
+  "pipeline": "taoguan-migration-check",
+  "assets": [
+    {
+      "tier": "detail",
+      "slug": "taoguan",
+      "file": "migration-demo/models/detail/taoguan.glb",
+      "glbVersion": 2,
+      "totalBytes": 17776,
+      "gzipBytes": 13208,
+      "geometryBytes": 16224,
+      "textureBytes": 182,
+      "vertices": 672,
+      "triangles": 1248,
+      "indexType": "u16",
+      "indexComponentType": 5123,
+      "attributes": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "layout": {
+        "rows": [
+          {
+            "semantic": "POSITION",
+            "componentType": "u16",
+            "normalized": false,
+            "components": 3,
+            "bytesPerVertex": 6
+          },
+          {
+            "semantic": "NORMAL",
+            "componentType": "i8",
+            "normalized": false,
+            "components": 3,
+            "bytesPerVertex": 3
+          },
+          {
+            "semantic": "TEXCOORD_0",
+            "componentType": "u16",
+            "normalized": false,
+            "components": 2,
+            "bytesPerVertex": 4
+          }
+        ],
+        "bytesPerVertex": 13,
+        "alignedStride": 16,
+        "isQuantized": false
+      },
+      "quantization": true,
+      "extensionsUsed": [
+        "KHR_mesh_quantization"
+      ],
+      "images": [
+        {
+          "role": "baseColor",
+          "format": "image/png",
+          "bytes": 182,
+          "width": 64,
+          "height": 64,
+          "gpuWithMips": 21845
+        }
+      ],
+      "textureGPUBytes": 21845
+    }
+  ],
+  "cache": [
+    {
+      "tier": "detail",
+      "slug": "taoguan",
+      "vertices": 672,
+      "triangles": 1248,
+      "indicesReferenced": 672,
+      "reuseRatio": 5.57,
+      "acmr32": 1.011,
+      "acmr16": 1.011,
+      "indexType": "u16"
+    }
+  ],
+  "budgets": {
+    "detailTierTotalBytes": 83886080,
+    "detailTierTotalHuman": "80 MiB",
+    "cloudflareSingleFileBytes": 26214400,
+    "cloudflareSingleFileHuman": "25 MiB",
+    "wechatMainPackageBytes": 1572864,
+    "wechatMainPackageHuman": "1.5 MB",
+    "webFirstInteractiveBudgetMs": 2000,
+    "webDetailReadyBudgetMs": 8000
+  },
+  "budgetMetrics": {
+    "note": "两个指标分管两件事，不能混用。transfer = gzip 后的网络传输体积，决定用户实际下载多少和缓存占用；raw = GLB 原始体积，只受部署平台单文件上限约束。",
+    "transfer": "gzip 字节数（net）",
+    "raw": "GLB 原始字节数（disk/deploy）"
+  },
+  "tierBudgets": {
+    "detail": {
+      "transferBudget": 6291456,
+      "transferBudgetHuman": "6 MiB",
+      "rawBudget": 10485760,
+      "rawBudgetHuman": "10 MiB"
+    }
+  },
+  "originals": {},
+  "problems": []
+}

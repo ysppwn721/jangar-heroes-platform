@@ -1,0 +1,2224 @@
+{
+  "generatedAt": "2026-10-11T12:22:32.031Z",
+  "pipeline": "jiangger-asset-pipeline",
+  "assets": [
+    {
+      "tier": "preview",
+      "slug": "alatancheji",
+      "file": "public/models/preview/alatancheji.glb",
+      "glbVersion": 2,
+      "totalBytes": 755408,
+      "gzipBytes": 662499,
+      "geometryBytes": 537696,
+      "textureBytes": 216051,
+      "vertices": 27726,
+      "triangles": 29543,
+      "indexType": "u16",
+      "indexComponentType": 5123,
+      "attributes": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "layout": {
+        "rows": [
+          {
+            "semantic": "POSITION",
+            "componentType": "i16",
+            "normalized": true,
+            "components": 3,
+            "bytesPerVertex": 6
+          },
+          {
+            "semantic": "NORMAL",
+            "componentType": "i8",
+            "normalized": false,
+            "components": 3,
+            "bytesPerVertex": 3
+          },
+          {
+            "semantic": "TEXCOORD_0",
+            "componentType": "u16",
+            "normalized": false,
+            "components": 2,
+            "bytesPerVertex": 4
+          }
+        ],
+        "bytesPerVertex": 13,
+        "alignedStride": 16,
+        "isQuantized": true
+      },
+      "quantization": true,
+      "extensionsUsed": [
+        "KHR_mesh_quantization"
+      ],
+      "images": [
+        {
+          "role": "baseColor",
+          "format": "image/jpeg",
+          "bytes": 191386,
+          "width": 768,
+          "height": 768,
+          "gpuWithMips": 3145728
+        },
+        {
+          "role": "normal",
+          "format": "image/jpeg",
+          "bytes": 2782,
+          "width": 256,
+          "height": 256,
+          "gpuWithMips": 349525
+        },
+        {
+          "role": "metalRough",
+          "format": "image/jpeg",
+          "bytes": 21883,
+          "width": 256,
+          "height": 256,
+          "gpuWithMips": 349525
+        }
+      ],
+      "textureGPUBytes": 3844778
+    },
+    {
+      "tier": "preview",
+      "slug": "guzangongbu",
+      "file": "public/models/preview/guzangongbu.glb",
+      "glbVersion": 2,
+      "totalBytes": 674356,
+      "gzipBytes": 593798,
+      "geometryBytes": 496041,
+      "textureBytes": 176656,
+      "vertices": 25263,
+      "triangles": 27937,
+      "indexType": "u16",
+      "indexComponentType": 5123,
+      "attributes": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "layout": {
+        "rows": [
+          {
+            "semantic": "POSITION",
+            "componentType": "i16",
+            "normalized": true,
+            "components": 3,
+            "bytesPerVertex": 6
+          },
+          {
+            "semantic": "NORMAL",
+            "componentType": "i8",
+            "normalized": false,
+            "components": 3,
+            "bytesPerVertex": 3
+          },
+          {
+            "semantic": "TEXCOORD_0",
+            "componentType": "u16",
+            "normalized": false,
+            "components": 2,
+            "bytesPerVertex": 4
+          }
+        ],
+        "bytesPerVertex": 13,
+        "alignedStride": 16,
+        "isQuantized": true
+      },
+      "quantization": true,
+      "extensionsUsed": [
+        "KHR_mesh_quantization"
+      ],
+      "images": [
+        {
+          "role": "baseColor",
+          "format": "image/jpeg",
+          "bytes": 160084,
+          "width": 768,
+          "height": 768,
+          "gpuWithMips": 3145728
+        },
+        {
+          "role": "normal",
+          "format": "image/jpeg",
+          "bytes": 2793,
+          "width": 256,
+          "height": 256,
+          "gpuWithMips": 349525
+        },
+        {
+          "role": "metalRough",
+          "format": "image/jpeg",
+          "bytes": 13779,
+          "width": 256,
+          "height": 256,
+          "gpuWithMips": 349525
+        }
+      ],
+      "textureGPUBytes": 3844778
+    },
+    {
+      "tier": "preview",
+      "slug": "harijilagen",
+      "file": "public/models/preview/harijilagen.glb",
+      "glbVersion": 2,
+      "totalBytes": 574616,
+      "gzipBytes": 505478,
+      "geometryBytes": 431494,
+      "textureBytes": 141466,
+      "vertices": 21880,
+      "triangles": 24509,
+      "indexType": "u16",
+      "indexComponentType": 5123,
+      "attributes": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "layout": {
+        "rows": [
+          {
+            "semantic": "POSITION",
+            "componentType": "i16",
+            "normalized": true,
+            "components": 3,
+            "bytesPerVertex": 6
+          },
+          {
+            "semantic": "NORMAL",
+            "componentType": "i8",
+            "normalized": false,
+            "components": 3,
+            "bytesPerVertex": 3
+          },
+          {
+            "semantic": "TEXCOORD_0",
+            "componentType": "u16",
+            "normalized": false,
+            "components": 2,
+            "bytesPerVertex": 4
+          }
+        ],
+        "bytesPerVertex": 13,
+        "alignedStride": 16,
+        "isQuantized": true
+      },
+      "quantization": true,
+      "extensionsUsed": [
+        "KHR_mesh_quantization"
+      ],
+      "images": [
+        {
+          "role": "baseColor",
+          "format": "image/jpeg",
+          "bytes": 133205,
+          "width": 768,
+          "height": 768,
+          "gpuWithMips": 3145728
+        },
+        {
+          "role": "normal",
+          "format": "image/jpeg",
+          "bytes": 2548,
+          "width": 256,
+          "height": 256,
+          "gpuWithMips": 349525
+        },
+        {
+          "role": "metalRough",
+          "format": "image/jpeg",
+          "bytes": 5713,
+          "width": 256,
+          "height": 256,
+          "gpuWithMips": 349525
+        }
+      ],
+      "textureGPUBytes": 3844778
+    },
+    {
+      "tier": "preview",
+      "slug": "harinidun",
+      "file": "public/models/preview/harinidun.glb",
+      "glbVersion": 2,
+      "totalBytes": 654272,
+      "gzipBytes": 567468,
+      "geometryBytes": 504129,
+      "textureBytes": 148485,
+      "vertices": 26397,
+      "triangles": 26828,
+      "indexType": "u16",
+      "indexComponentType": 5123,
+      "attributes": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "layout": {
+        "rows": [
+          {
+            "semantic": "POSITION",
+            "componentType": "i16",
+            "normalized": true,
+            "components": 3,
+            "bytesPerVertex": 6
+          },
+          {
+            "semantic": "NORMAL",
+            "componentType": "i8",
+            "normalized": false,
+            "components": 3,
+            "bytesPerVertex": 3
+          },
+          {
+            "semantic": "TEXCOORD_0",
+            "componentType": "u16",
+            "normalized": false,
+            "components": 2,
+            "bytesPerVertex": 4
+          }
+        ],
+        "bytesPerVertex": 13,
+        "alignedStride": 16,
+        "isQuantized": true
+      },
+      "quantization": true,
+      "extensionsUsed": [
+        "KHR_mesh_quantization"
+      ],
+      "images": [
+        {
+          "role": "baseColor",
+          "format": "image/jpeg",
+          "bytes": 140721,
+          "width": 768,
+          "height": 768,
+          "gpuWithMips": 3145728
+        },
+        {
+          "role": "normal",
+          "format": "image/jpeg",
+          "bytes": 2419,
+          "width": 256,
+          "height": 256,
+          "gpuWithMips": 349525
+        },
+        {
+          "role": "metalRough",
+          "format": "image/jpeg",
+          "bytes": 5345,
+          "width": 256,
+          "height": 256,
+          "gpuWithMips": 349525
+        }
+      ],
+      "textureGPUBytes": 3844778
+    },
+    {
+      "tier": "preview",
+      "slug": "hejilagen",
+      "file": "public/models/preview/hejilagen.glb",
+      "glbVersion": 2,
+      "totalBytes": 650268,
+      "gzipBytes": 572051,
+      "geometryBytes": 508598,
+      "textureBytes": 140011,
+      "vertices": 24764,
+      "triangles": 31111,
+      "indexType": "u16",
+      "indexComponentType": 5123,
+      "attributes": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "layout": {
+        "rows": [
+          {
+            "semantic": "POSITION",
+            "componentType": "i16",
+            "normalized": true,
+            "components": 3,
+            "bytesPerVertex": 6
+          },
+          {
+            "semantic": "NORMAL",
+            "componentType": "i8",
+            "normalized": false,
+            "components": 3,
+            "bytesPerVertex": 3
+          },
+          {
+            "semantic": "TEXCOORD_0",
+            "componentType": "u16",
+            "normalized": false,
+            "components": 2,
+            "bytesPerVertex": 4
+          }
+        ],
+        "bytesPerVertex": 13,
+        "alignedStride": 16,
+        "isQuantized": true
+      },
+      "quantization": true,
+      "extensionsUsed": [
+        "KHR_mesh_quantization"
+      ],
+      "images": [
+        {
+          "role": "baseColor",
+          "format": "image/jpeg",
+          "bytes": 125105,
+          "width": 768,
+          "height": 768,
+          "gpuWithMips": 3145728
+        },
+        {
+          "role": "normal",
+          "format": "image/jpeg",
+          "bytes": 2005,
+          "width": 256,
+          "height": 256,
+          "gpuWithMips": 349525
+        },
+        {
+          "role": "metalRough",
+          "format": "image/jpeg",
+          "bytes": 12901,
+          "width": 256,
+          "height": 256,
+          "gpuWithMips": 349525
+        }
+      ],
+      "textureGPUBytes": 3844778
+    },
+    {
+      "tier": "preview",
+      "slug": "hongguer",
+      "file": "public/models/preview/hongguer.glb",
+      "glbVersion": 2,
+      "totalBytes": 779760,
+      "gzipBytes": 678275,
+      "geometryBytes": 620247,
+      "textureBytes": 157854,
+      "vertices": 31443,
+      "triangles": 35248,
+      "indexType": "u16",
+      "indexComponentType": 5123,
+      "attributes": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "layout": {
+        "rows": [
+          {
+            "semantic": "POSITION",
+            "componentType": "i16",
+            "normalized": true,
+            "components": 3,
+            "bytesPerVertex": 6
+          },
+          {
+            "semantic": "NORMAL",
+            "componentType": "i8",
+            "normalized": false,
+            "components": 3,
+            "bytesPerVertex": 3
+          },
+          {
+            "semantic": "TEXCOORD_0",
+            "componentType": "u16",
+            "normalized": false,
+            "components": 2,
+            "bytesPerVertex": 4
+          }
+        ],
+        "bytesPerVertex": 13,
+        "alignedStride": 16,
+        "isQuantized": true
+      },
+      "quantization": true,
+      "extensionsUsed": [
+        "KHR_mesh_quantization"
+      ],
+      "images": [
+        {
+          "role": "baseColor",
+          "format": "image/jpeg",
+          "bytes": 133271,
+          "width": 768,
+          "height": 768,
+          "gpuWithMips": 3145728
+        },
+        {
+          "role": "normal",
+          "format": "image/jpeg",
+          "bytes": 2380,
+          "width": 256,
+          "height": 256,
+          "gpuWithMips": 349525
+        },
+        {
+          "role": "metalRough",
+          "format": "image/jpeg",
+          "bytes": 22203,
+          "width": 256,
+          "height": 256,
+          "gpuWithMips": 349525
+        }
+      ],
+      "textureGPUBytes": 3844778
+    },
+    {
+      "tier": "preview",
+      "slug": "jiangger",
+      "file": "public/models/preview/jiangger.glb",
+      "glbVersion": 2,
+      "totalBytes": 593624,
+      "gzipBytes": 531196,
+      "geometryBytes": 391984,
+      "textureBytes": 199982,
+      "vertices": 19714,
+      "triangles": 22617,
+      "indexType": "u16",
+      "indexComponentType": 5123,
+      "attributes": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "layout": {
+        "rows": [
+          {
+            "semantic": "POSITION",
+            "componentType": "i16",
+            "normalized": true,
+            "components": 3,
+            "bytesPerVertex": 6
+          },
+          {
+            "semantic": "NORMAL",
+            "componentType": "i8",
+            "normalized": false,
+            "components": 3,
+            "bytesPerVertex": 3
+          },
+          {
+            "semantic": "TEXCOORD_0",
+            "componentType": "u16",
+            "normalized": false,
+            "components": 2,
+            "bytesPerVertex": 4
+          }
+        ],
+        "bytesPerVertex": 13,
+        "alignedStride": 16,
+        "isQuantized": true
+      },
+      "quantization": true,
+      "extensionsUsed": [
+        "KHR_mesh_quantization"
+      ],
+      "images": [
+        {
+          "role": "baseColor",
+          "format": "image/jpeg",
+          "bytes": 178069,
+          "width": 768,
+          "height": 768,
+          "gpuWithMips": 3145728
+        },
+        {
+          "role": "normal",
+          "format": "image/jpeg",
+          "bytes": 3845,
+          "width": 256,
+          "height": 256,
+          "gpuWithMips": 349525
+        },
+        {
+          "role": "metalRough",
+          "format": "image/jpeg",
+          "bytes": 18068,
+          "width": 256,
+          "height": 256,
+          "gpuWithMips": 349525
+        }
+      ],
+      "textureGPUBytes": 3844778
+    },
+    {
+      "tier": "preview",
+      "slug": "mingyan",
+      "file": "public/models/preview/mingyan.glb",
+      "glbVersion": 2,
+      "totalBytes": 592588,
+      "gzipBytes": 522865,
+      "geometryBytes": 423804,
+      "textureBytes": 167131,
+      "vertices": 21420,
+      "triangles": 24224,
+      "indexType": "u16",
+      "indexComponentType": 5123,
+      "attributes": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "layout": {
+        "rows": [
+          {
+            "semantic": "POSITION",
+            "componentType": "i16",
+            "normalized": true,
+            "components": 3,
+            "bytesPerVertex": 6
+          },
+          {
+            "semantic": "NORMAL",
+            "componentType": "i8",
+            "normalized": false,
+            "components": 3,
+            "bytesPerVertex": 3
+          },
+          {
+            "semantic": "TEXCOORD_0",
+            "componentType": "u16",
+            "normalized": false,
+            "components": 2,
+            "bytesPerVertex": 4
+          }
+        ],
+        "bytesPerVertex": 13,
+        "alignedStride": 16,
+        "isQuantized": true
+      },
+      "quantization": true,
+      "extensionsUsed": [
+        "KHR_mesh_quantization"
+      ],
+      "images": [
+        {
+          "role": "baseColor",
+          "format": "image/jpeg",
+          "bytes": 157319,
+          "width": 768,
+          "height": 768,
+          "gpuWithMips": 3145728
+        },
+        {
+          "role": "normal",
+          "format": "image/jpeg",
+          "bytes": 3402,
+          "width": 256,
+          "height": 256,
+          "gpuWithMips": 349525
+        },
+        {
+          "role": "metalRough",
+          "format": "image/jpeg",
+          "bytes": 6410,
+          "width": 256,
+          "height": 256,
+          "gpuWithMips": 349525
+        }
+      ],
+      "textureGPUBytes": 3844778
+    },
+    {
+      "tier": "preview",
+      "slug": "naqinshanghuer",
+      "file": "public/models/preview/naqinshanghuer.glb",
+      "glbVersion": 2,
+      "totalBytes": 585124,
+      "gzipBytes": 516280,
+      "geometryBytes": 396297,
+      "textureBytes": 187167,
+      "vertices": 20271,
+      "triangles": 22129,
+      "indexType": "u16",
+      "indexComponentType": 5123,
+      "attributes": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "layout": {
+        "rows": [
+          {
+            "semantic": "POSITION",
+            "componentType": "i16",
+            "normalized": true,
+            "components": 3,
+            "bytesPerVertex": 6
+          },
+          {
+            "semantic": "NORMAL",
+            "componentType": "i8",
+            "normalized": false,
+            "components": 3,
+            "bytesPerVertex": 3
+          },
+          {
+            "semantic": "TEXCOORD_0",
+            "componentType": "u16",
+            "normalized": false,
+            "components": 2,
+            "bytesPerVertex": 4
+          }
+        ],
+        "bytesPerVertex": 13,
+        "alignedStride": 16,
+        "isQuantized": true
+      },
+      "quantization": true,
+      "extensionsUsed": [
+        "KHR_mesh_quantization"
+      ],
+      "images": [
+        {
+          "role": "baseColor",
+          "format": "image/jpeg",
+          "bytes": 181400,
+          "width": 768,
+          "height": 768,
+          "gpuWithMips": 3145728
+        },
+        {
+          "role": "normal",
+          "format": "image/jpeg",
+          "bytes": 3270,
+          "width": 256,
+          "height": 256,
+          "gpuWithMips": 349525
+        },
+        {
+          "role": "metalRough",
+          "format": "image/jpeg",
+          "bytes": 2497,
+          "width": 256,
+          "height": 256,
+          "gpuWithMips": 349525
+        }
+      ],
+      "textureGPUBytes": 3844778
+    },
+    {
+      "tier": "preview",
+      "slug": "saber",
+      "file": "public/models/preview/saber.glb",
+      "glbVersion": 2,
+      "totalBytes": 648204,
+      "gzipBytes": 559088,
+      "geometryBytes": 529378,
+      "textureBytes": 117169,
+      "vertices": 27280,
+      "triangles": 29123,
+      "indexType": "u16",
+      "indexComponentType": 5123,
+      "attributes": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "layout": {
+        "rows": [
+          {
+            "semantic": "POSITION",
+            "componentType": "i16",
+            "normalized": true,
+            "components": 3,
+            "bytesPerVertex": 6
+          },
+          {
+            "semantic": "NORMAL",
+            "componentType": "i8",
+            "normalized": false,
+            "components": 3,
+            "bytesPerVertex": 3
+          },
+          {
+            "semantic": "TEXCOORD_0",
+            "componentType": "u16",
+            "normalized": false,
+            "components": 2,
+            "bytesPerVertex": 4
+          }
+        ],
+        "bytesPerVertex": 13,
+        "alignedStride": 16,
+        "isQuantized": true
+      },
+      "quantization": true,
+      "extensionsUsed": [
+        "KHR_mesh_quantization"
+      ],
+      "images": [
+        {
+          "role": "baseColor",
+          "format": "image/jpeg",
+          "bytes": 112226,
+          "width": 768,
+          "height": 768,
+          "gpuWithMips": 3145728
+        },
+        {
+          "role": "normal",
+          "format": "image/jpeg",
+          "bytes": 2186,
+          "width": 256,
+          "height": 256,
+          "gpuWithMips": 349525
+        },
+        {
+          "role": "metalRough",
+          "format": "image/jpeg",
+          "bytes": 2757,
+          "width": 256,
+          "height": 256,
+          "gpuWithMips": 349525
+        }
+      ],
+      "textureGPUBytes": 3844778
+    },
+    {
+      "tier": "preview",
+      "slug": "sailihantabage",
+      "file": "public/models/preview/sailihantabage.glb",
+      "glbVersion": 2,
+      "totalBytes": 528268,
+      "gzipBytes": 460883,
+      "geometryBytes": 424581,
+      "textureBytes": 102034,
+      "vertices": 21141,
+      "triangles": 24958,
+      "indexType": "u16",
+      "indexComponentType": 5123,
+      "attributes": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "layout": {
+        "rows": [
+          {
+            "semantic": "POSITION",
+            "componentType": "i16",
+            "normalized": true,
+            "components": 3,
+            "bytesPerVertex": 6
+          },
+          {
+            "semantic": "NORMAL",
+            "componentType": "i8",
+            "normalized": false,
+            "components": 3,
+            "bytesPerVertex": 3
+          },
+          {
+            "semantic": "TEXCOORD_0",
+            "componentType": "u16",
+            "normalized": false,
+            "components": 2,
+            "bytesPerVertex": 4
+          }
+        ],
+        "bytesPerVertex": 13,
+        "alignedStride": 16,
+        "isQuantized": true
+      },
+      "quantization": true,
+      "extensionsUsed": [
+        "KHR_mesh_quantization"
+      ],
+      "images": [
+        {
+          "role": "baseColor",
+          "format": "image/jpeg",
+          "bytes": 97306,
+          "width": 768,
+          "height": 768,
+          "gpuWithMips": 3145728
+        },
+        {
+          "role": "normal",
+          "format": "image/jpeg",
+          "bytes": 1636,
+          "width": 256,
+          "height": 256,
+          "gpuWithMips": 349525
+        },
+        {
+          "role": "metalRough",
+          "format": "image/jpeg",
+          "bytes": 3092,
+          "width": 256,
+          "height": 256,
+          "gpuWithMips": 349525
+        }
+      ],
+      "textureGPUBytes": 3844778
+    },
+    {
+      "tier": "preview",
+      "slug": "sanala",
+      "file": "public/models/preview/sanala.glb",
+      "glbVersion": 2,
+      "totalBytes": 570776,
+      "gzipBytes": 496352,
+      "geometryBytes": 438925,
+      "textureBytes": 130187,
+      "vertices": 22663,
+      "triangles": 24051,
+      "indexType": "u16",
+      "indexComponentType": 5123,
+      "attributes": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "layout": {
+        "rows": [
+          {
+            "semantic": "POSITION",
+            "componentType": "i16",
+            "normalized": true,
+            "components": 3,
+            "bytesPerVertex": 6
+          },
+          {
+            "semantic": "NORMAL",
+            "componentType": "i8",
+            "normalized": false,
+            "components": 3,
+            "bytesPerVertex": 3
+          },
+          {
+            "semantic": "TEXCOORD_0",
+            "componentType": "u16",
+            "normalized": false,
+            "components": 2,
+            "bytesPerVertex": 4
+          }
+        ],
+        "bytesPerVertex": 13,
+        "alignedStride": 16,
+        "isQuantized": true
+      },
+      "quantization": true,
+      "extensionsUsed": [
+        "KHR_mesh_quantization"
+      ],
+      "images": [
+        {
+          "role": "baseColor",
+          "format": "image/jpeg",
+          "bytes": 105465,
+          "width": 768,
+          "height": 768,
+          "gpuWithMips": 3145728
+        },
+        {
+          "role": "normal",
+          "format": "image/jpeg",
+          "bytes": 1837,
+          "width": 256,
+          "height": 256,
+          "gpuWithMips": 349525
+        },
+        {
+          "role": "metalRough",
+          "format": "image/jpeg",
+          "bytes": 22885,
+          "width": 256,
+          "height": 256,
+          "gpuWithMips": 349525
+        }
+      ],
+      "textureGPUBytes": 3844778
+    },
+    {
+      "tier": "detail",
+      "slug": "alatancheji",
+      "file": "public/models/alatancheji.glb",
+      "glbVersion": 2,
+      "totalBytes": 5140260,
+      "gzipBytes": 3491171,
+      "geometryBytes": 4077464,
+      "textureBytes": 1061127,
+      "vertices": 135248,
+      "triangles": 193270,
+      "indexType": "u32",
+      "indexComponentType": 5125,
+      "attributes": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "layout": {
+        "rows": [
+          {
+            "semantic": "POSITION",
+            "componentType": "i16",
+            "normalized": true,
+            "components": 3,
+            "bytesPerVertex": 6
+          },
+          {
+            "semantic": "NORMAL",
+            "componentType": "i8",
+            "normalized": false,
+            "components": 3,
+            "bytesPerVertex": 3
+          },
+          {
+            "semantic": "TEXCOORD_0",
+            "componentType": "u16",
+            "normalized": false,
+            "components": 2,
+            "bytesPerVertex": 4
+          }
+        ],
+        "bytesPerVertex": 13,
+        "alignedStride": 16,
+        "isQuantized": true
+      },
+      "quantization": true,
+      "extensionsUsed": [
+        "KHR_mesh_quantization"
+      ],
+      "images": [
+        {
+          "role": "baseColor",
+          "format": "image/jpeg",
+          "bytes": 784834,
+          "width": 1536,
+          "height": 1536,
+          "gpuWithMips": 12582912
+        },
+        {
+          "role": "normal",
+          "format": "image/jpeg",
+          "bytes": 93594,
+          "width": 768,
+          "height": 768,
+          "gpuWithMips": 3145728
+        },
+        {
+          "role": "metalRough",
+          "format": "image/jpeg",
+          "bytes": 182699,
+          "width": 768,
+          "height": 768,
+          "gpuWithMips": 3145728
+        }
+      ],
+      "textureGPUBytes": 18874368
+    },
+    {
+      "tier": "detail",
+      "slug": "guzangongbu",
+      "file": "public/models/guzangongbu.glb",
+      "glbVersion": 2,
+      "totalBytes": 4673696,
+      "gzipBytes": 3144596,
+      "geometryBytes": 3797336,
+      "textureBytes": 874692,
+      "vertices": 123440,
+      "triangles": 182718,
+      "indexType": "u32",
+      "indexComponentType": 5125,
+      "attributes": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "layout": {
+        "rows": [
+          {
+            "semantic": "POSITION",
+            "componentType": "i16",
+            "normalized": true,
+            "components": 3,
+            "bytesPerVertex": 6
+          },
+          {
+            "semantic": "NORMAL",
+            "componentType": "i8",
+            "normalized": false,
+            "components": 3,
+            "bytesPerVertex": 3
+          },
+          {
+            "semantic": "TEXCOORD_0",
+            "componentType": "u16",
+            "normalized": false,
+            "components": 2,
+            "bytesPerVertex": 4
+          }
+        ],
+        "bytesPerVertex": 13,
+        "alignedStride": 16,
+        "isQuantized": true
+      },
+      "quantization": true,
+      "extensionsUsed": [
+        "KHR_mesh_quantization"
+      ],
+      "images": [
+        {
+          "role": "baseColor",
+          "format": "image/jpeg",
+          "bytes": 672916,
+          "width": 1536,
+          "height": 1536,
+          "gpuWithMips": 12582912
+        },
+        {
+          "role": "normal",
+          "format": "image/jpeg",
+          "bytes": 85223,
+          "width": 768,
+          "height": 768,
+          "gpuWithMips": 3145728
+        },
+        {
+          "role": "metalRough",
+          "format": "image/jpeg",
+          "bytes": 116553,
+          "width": 768,
+          "height": 768,
+          "gpuWithMips": 3145728
+        }
+      ],
+      "textureGPUBytes": 18874368
+    },
+    {
+      "tier": "detail",
+      "slug": "harijilagen",
+      "file": "public/models/harijilagen.glb",
+      "glbVersion": 2,
+      "totalBytes": 4030900,
+      "gzipBytes": 2678177,
+      "geometryBytes": 3337623,
+      "textureBytes": 691602,
+      "vertices": 107787,
+      "triangles": 161366,
+      "indexType": "u32",
+      "indexComponentType": 5125,
+      "attributes": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "layout": {
+        "rows": [
+          {
+            "semantic": "POSITION",
+            "componentType": "i16",
+            "normalized": true,
+            "components": 3,
+            "bytesPerVertex": 6
+          },
+          {
+            "semantic": "NORMAL",
+            "componentType": "i8",
+            "normalized": false,
+            "components": 3,
+            "bytesPerVertex": 3
+          },
+          {
+            "semantic": "TEXCOORD_0",
+            "componentType": "u16",
+            "normalized": false,
+            "components": 2,
+            "bytesPerVertex": 4
+          }
+        ],
+        "bytesPerVertex": 13,
+        "alignedStride": 16,
+        "isQuantized": true
+      },
+      "quantization": true,
+      "extensionsUsed": [
+        "KHR_mesh_quantization"
+      ],
+      "images": [
+        {
+          "role": "baseColor",
+          "format": "image/jpeg",
+          "bytes": 566336,
+          "width": 1536,
+          "height": 1536,
+          "gpuWithMips": 12582912
+        },
+        {
+          "role": "normal",
+          "format": "image/jpeg",
+          "bytes": 73041,
+          "width": 768,
+          "height": 768,
+          "gpuWithMips": 3145728
+        },
+        {
+          "role": "metalRough",
+          "format": "image/jpeg",
+          "bytes": 52225,
+          "width": 768,
+          "height": 768,
+          "gpuWithMips": 3145728
+        }
+      ],
+      "textureGPUBytes": 18874368
+    },
+    {
+      "tier": "detail",
+      "slug": "harinidun",
+      "file": "public/models/harinidun.glb",
+      "glbVersion": 2,
+      "totalBytes": 4482784,
+      "gzipBytes": 2987695,
+      "geometryBytes": 3756293,
+      "textureBytes": 724819,
+      "vertices": 125537,
+      "triangles": 177026,
+      "indexType": "u32",
+      "indexComponentType": 5125,
+      "attributes": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "layout": {
+        "rows": [
+          {
+            "semantic": "POSITION",
+            "componentType": "i16",
+            "normalized": true,
+            "components": 3,
+            "bytesPerVertex": 6
+          },
+          {
+            "semantic": "NORMAL",
+            "componentType": "i8",
+            "normalized": false,
+            "components": 3,
+            "bytesPerVertex": 3
+          },
+          {
+            "semantic": "TEXCOORD_0",
+            "componentType": "u16",
+            "normalized": false,
+            "components": 2,
+            "bytesPerVertex": 4
+          }
+        ],
+        "bytesPerVertex": 13,
+        "alignedStride": 16,
+        "isQuantized": true
+      },
+      "quantization": true,
+      "extensionsUsed": [
+        "KHR_mesh_quantization"
+      ],
+      "images": [
+        {
+          "role": "baseColor",
+          "format": "image/jpeg",
+          "bytes": 590863,
+          "width": 1536,
+          "height": 1536,
+          "gpuWithMips": 12582912
+        },
+        {
+          "role": "normal",
+          "format": "image/jpeg",
+          "bytes": 71551,
+          "width": 768,
+          "height": 768,
+          "gpuWithMips": 3145728
+        },
+        {
+          "role": "metalRough",
+          "format": "image/jpeg",
+          "bytes": 62405,
+          "width": 768,
+          "height": 768,
+          "gpuWithMips": 3145728
+        }
+      ],
+      "textureGPUBytes": 18874368
+    },
+    {
+      "tier": "detail",
+      "slug": "hejilagen",
+      "file": "public/models/hejilagen.glb",
+      "glbVersion": 2,
+      "totalBytes": 4766324,
+      "gzipBytes": 3084739,
+      "geometryBytes": 4075727,
+      "textureBytes": 688924,
+      "vertices": 126827,
+      "triangles": 202248,
+      "indexType": "u32",
+      "indexComponentType": 5125,
+      "attributes": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "layout": {
+        "rows": [
+          {
+            "semantic": "POSITION",
+            "componentType": "i16",
+            "normalized": true,
+            "components": 3,
+            "bytesPerVertex": 6
+          },
+          {
+            "semantic": "NORMAL",
+            "componentType": "i8",
+            "normalized": false,
+            "components": 3,
+            "bytesPerVertex": 3
+          },
+          {
+            "semantic": "TEXCOORD_0",
+            "componentType": "u16",
+            "normalized": false,
+            "components": 2,
+            "bytesPerVertex": 4
+          }
+        ],
+        "bytesPerVertex": 13,
+        "alignedStride": 16,
+        "isQuantized": true
+      },
+      "quantization": true,
+      "extensionsUsed": [
+        "KHR_mesh_quantization"
+      ],
+      "images": [
+        {
+          "role": "baseColor",
+          "format": "image/jpeg",
+          "bytes": 518527,
+          "width": 1536,
+          "height": 1536,
+          "gpuWithMips": 12582912
+        },
+        {
+          "role": "normal",
+          "format": "image/jpeg",
+          "bytes": 59917,
+          "width": 768,
+          "height": 768,
+          "gpuWithMips": 3145728
+        },
+        {
+          "role": "metalRough",
+          "format": "image/jpeg",
+          "bytes": 110480,
+          "width": 768,
+          "height": 768,
+          "gpuWithMips": 3145728
+        }
+      ],
+      "textureGPUBytes": 18874368
+    },
+    {
+      "tier": "detail",
+      "slug": "hongguer",
+      "file": "public/models/hongguer.glb",
+      "glbVersion": 2,
+      "totalBytes": 5476244,
+      "gzipBytes": 3585580,
+      "geometryBytes": 4649570,
+      "textureBytes": 825002,
+      "vertices": 149678,
+      "triangles": 225313,
+      "indexType": "u32",
+      "indexComponentType": 5125,
+      "attributes": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "layout": {
+        "rows": [
+          {
+            "semantic": "POSITION",
+            "componentType": "i16",
+            "normalized": true,
+            "components": 3,
+            "bytesPerVertex": 6
+          },
+          {
+            "semantic": "NORMAL",
+            "componentType": "i8",
+            "normalized": false,
+            "components": 3,
+            "bytesPerVertex": 3
+          },
+          {
+            "semantic": "TEXCOORD_0",
+            "componentType": "u16",
+            "normalized": false,
+            "components": 2,
+            "bytesPerVertex": 4
+          }
+        ],
+        "bytesPerVertex": 13,
+        "alignedStride": 16,
+        "isQuantized": true
+      },
+      "quantization": true,
+      "extensionsUsed": [
+        "KHR_mesh_quantization"
+      ],
+      "images": [
+        {
+          "role": "baseColor",
+          "format": "image/jpeg",
+          "bytes": 569701,
+          "width": 1536,
+          "height": 1536,
+          "gpuWithMips": 12582912
+        },
+        {
+          "role": "normal",
+          "format": "image/jpeg",
+          "bytes": 72923,
+          "width": 768,
+          "height": 768,
+          "gpuWithMips": 3145728
+        },
+        {
+          "role": "metalRough",
+          "format": "image/jpeg",
+          "bytes": 182378,
+          "width": 768,
+          "height": 768,
+          "gpuWithMips": 3145728
+        }
+      ],
+      "textureGPUBytes": 18874368
+    },
+    {
+      "tier": "detail",
+      "slug": "jiangger",
+      "file": "public/models/jiangger.glb",
+      "glbVersion": 2,
+      "totalBytes": 7167696,
+      "gzipBytes": 5061562,
+      "geometryBytes": 5116112,
+      "textureBytes": 2049916,
+      "vertices": 160256,
+      "triangles": 252732,
+      "indexType": "u32",
+      "indexComponentType": 5125,
+      "attributes": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "layout": {
+        "rows": [
+          {
+            "semantic": "POSITION",
+            "componentType": "i16",
+            "normalized": true,
+            "components": 3,
+            "bytesPerVertex": 6
+          },
+          {
+            "semantic": "NORMAL",
+            "componentType": "i8",
+            "normalized": false,
+            "components": 3,
+            "bytesPerVertex": 3
+          },
+          {
+            "semantic": "TEXCOORD_0",
+            "componentType": "u16",
+            "normalized": false,
+            "components": 2,
+            "bytesPerVertex": 4
+          }
+        ],
+        "bytesPerVertex": 13,
+        "alignedStride": 16,
+        "isQuantized": true
+      },
+      "quantization": true,
+      "extensionsUsed": [
+        "KHR_mesh_quantization"
+      ],
+      "images": [
+        {
+          "role": "baseColor",
+          "format": "image/jpeg",
+          "bytes": 1149163,
+          "width": 2048,
+          "height": 2048,
+          "gpuWithMips": 22369621
+        },
+        {
+          "role": "normal",
+          "format": "image/jpeg",
+          "bytes": 675320,
+          "width": 2048,
+          "height": 2048,
+          "gpuWithMips": 22369621
+        },
+        {
+          "role": "metalRough",
+          "format": "image/jpeg",
+          "bytes": 225433,
+          "width": 1024,
+          "height": 1024,
+          "gpuWithMips": 5592405
+        }
+      ],
+      "textureGPUBytes": 50331647
+    },
+    {
+      "tier": "detail",
+      "slug": "mingyan",
+      "file": "public/models/mingyan.glb",
+      "glbVersion": 2,
+      "totalBytes": 4166144,
+      "gzipBytes": 2824609,
+      "geometryBytes": 3317635,
+      "textureBytes": 846837,
+      "vertices": 108307,
+      "triangles": 159137,
+      "indexType": "u32",
+      "indexComponentType": 5125,
+      "attributes": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "layout": {
+        "rows": [
+          {
+            "semantic": "POSITION",
+            "componentType": "i16",
+            "normalized": true,
+            "components": 3,
+            "bytesPerVertex": 6
+          },
+          {
+            "semantic": "NORMAL",
+            "componentType": "i8",
+            "normalized": false,
+            "components": 3,
+            "bytesPerVertex": 3
+          },
+          {
+            "semantic": "TEXCOORD_0",
+            "componentType": "u16",
+            "normalized": false,
+            "components": 2,
+            "bytesPerVertex": 4
+          }
+        ],
+        "bytesPerVertex": 13,
+        "alignedStride": 16,
+        "isQuantized": true
+      },
+      "quantization": true,
+      "extensionsUsed": [
+        "KHR_mesh_quantization"
+      ],
+      "images": [
+        {
+          "role": "baseColor",
+          "format": "image/jpeg",
+          "bytes": 673078,
+          "width": 1536,
+          "height": 1536,
+          "gpuWithMips": 12582912
+        },
+        {
+          "role": "normal",
+          "format": "image/jpeg",
+          "bytes": 98768,
+          "width": 768,
+          "height": 768,
+          "gpuWithMips": 3145728
+        },
+        {
+          "role": "metalRough",
+          "format": "image/jpeg",
+          "bytes": 74991,
+          "width": 768,
+          "height": 768,
+          "gpuWithMips": 3145728
+        }
+      ],
+      "textureGPUBytes": 18874368
+    },
+    {
+      "tier": "detail",
+      "slug": "naqinshanghuer",
+      "file": "public/models/naqinshanghuer.glb",
+      "glbVersion": 2,
+      "totalBytes": 4014308,
+      "gzipBytes": 2765355,
+      "geometryBytes": 3086362,
+      "textureBytes": 926275,
+      "vertices": 102226,
+      "triangles": 146452,
+      "indexType": "u32",
+      "indexComponentType": 5125,
+      "attributes": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "layout": {
+        "rows": [
+          {
+            "semantic": "POSITION",
+            "componentType": "i16",
+            "normalized": true,
+            "components": 3,
+            "bytesPerVertex": 6
+          },
+          {
+            "semantic": "NORMAL",
+            "componentType": "i8",
+            "normalized": false,
+            "components": 3,
+            "bytesPerVertex": 3
+          },
+          {
+            "semantic": "TEXCOORD_0",
+            "componentType": "u16",
+            "normalized": false,
+            "components": 2,
+            "bytesPerVertex": 4
+          }
+        ],
+        "bytesPerVertex": 13,
+        "alignedStride": 16,
+        "isQuantized": true
+      },
+      "quantization": true,
+      "extensionsUsed": [
+        "KHR_mesh_quantization"
+      ],
+      "images": [
+        {
+          "role": "baseColor",
+          "format": "image/jpeg",
+          "bytes": 765270,
+          "width": 1536,
+          "height": 1536,
+          "gpuWithMips": 12582912
+        },
+        {
+          "role": "normal",
+          "format": "image/jpeg",
+          "bytes": 120651,
+          "width": 768,
+          "height": 768,
+          "gpuWithMips": 3145728
+        },
+        {
+          "role": "metalRough",
+          "format": "image/jpeg",
+          "bytes": 40354,
+          "width": 768,
+          "height": 768,
+          "gpuWithMips": 3145728
+        }
+      ],
+      "textureGPUBytes": 18874368
+    },
+    {
+      "tier": "detail",
+      "slug": "saber",
+      "file": "public/models/saber.glb",
+      "glbVersion": 2,
+      "totalBytes": 4543652,
+      "gzipBytes": 2946115,
+      "geometryBytes": 3955374,
+      "textureBytes": 586604,
+      "vertices": 129978,
+      "triangles": 188805,
+      "indexType": "u32",
+      "indexComponentType": 5125,
+      "attributes": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "layout": {
+        "rows": [
+          {
+            "semantic": "POSITION",
+            "componentType": "i16",
+            "normalized": true,
+            "components": 3,
+            "bytesPerVertex": 6
+          },
+          {
+            "semantic": "NORMAL",
+            "componentType": "i8",
+            "normalized": false,
+            "components": 3,
+            "bytesPerVertex": 3
+          },
+          {
+            "semantic": "TEXCOORD_0",
+            "componentType": "u16",
+            "normalized": false,
+            "components": 2,
+            "bytesPerVertex": 4
+          }
+        ],
+        "bytesPerVertex": 13,
+        "alignedStride": 16,
+        "isQuantized": true
+      },
+      "quantization": true,
+      "extensionsUsed": [
+        "KHR_mesh_quantization"
+      ],
+      "images": [
+        {
+          "role": "baseColor",
+          "format": "image/jpeg",
+          "bytes": 487902,
+          "width": 1536,
+          "height": 1536,
+          "gpuWithMips": 12582912
+        },
+        {
+          "role": "normal",
+          "format": "image/jpeg",
+          "bytes": 67801,
+          "width": 768,
+          "height": 768,
+          "gpuWithMips": 3145728
+        },
+        {
+          "role": "metalRough",
+          "format": "image/jpeg",
+          "bytes": 30901,
+          "width": 768,
+          "height": 768,
+          "gpuWithMips": 3145728
+        }
+      ],
+      "textureGPUBytes": 18874368
+    },
+    {
+      "tier": "detail",
+      "slug": "sailihantabage",
+      "file": "public/models/sailihantabage.glb",
+      "glbVersion": 2,
+      "totalBytes": 3861048,
+      "gzipBytes": 2494544,
+      "geometryBytes": 3355888,
+      "textureBytes": 503491,
+      "vertices": 107032,
+      "triangles": 163706,
+      "indexType": "u32",
+      "indexComponentType": 5125,
+      "attributes": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "layout": {
+        "rows": [
+          {
+            "semantic": "POSITION",
+            "componentType": "i16",
+            "normalized": true,
+            "components": 3,
+            "bytesPerVertex": 6
+          },
+          {
+            "semantic": "NORMAL",
+            "componentType": "i8",
+            "normalized": false,
+            "components": 3,
+            "bytesPerVertex": 3
+          },
+          {
+            "semantic": "TEXCOORD_0",
+            "componentType": "u16",
+            "normalized": false,
+            "components": 2,
+            "bytesPerVertex": 4
+          }
+        ],
+        "bytesPerVertex": 13,
+        "alignedStride": 16,
+        "isQuantized": true
+      },
+      "quantization": true,
+      "extensionsUsed": [
+        "KHR_mesh_quantization"
+      ],
+      "images": [
+        {
+          "role": "baseColor",
+          "format": "image/jpeg",
+          "bytes": 420222,
+          "width": 1536,
+          "height": 1536,
+          "gpuWithMips": 12582912
+        },
+        {
+          "role": "normal",
+          "format": "image/jpeg",
+          "bytes": 44396,
+          "width": 768,
+          "height": 768,
+          "gpuWithMips": 3145728
+        },
+        {
+          "role": "metalRough",
+          "format": "image/jpeg",
+          "bytes": 38873,
+          "width": 768,
+          "height": 768,
+          "gpuWithMips": 3145728
+        }
+      ],
+      "textureGPUBytes": 18874368
+    },
+    {
+      "tier": "detail",
+      "slug": "sanala",
+      "file": "public/models/sanala.glb",
+      "glbVersion": 2,
+      "totalBytes": 4028336,
+      "gzipBytes": 2691633,
+      "geometryBytes": 3321369,
+      "textureBytes": 705295,
+      "vertices": 110469,
+      "triangles": 157106,
+      "indexType": "u32",
+      "indexComponentType": 5125,
+      "attributes": [
+        "POSITION",
+        "NORMAL",
+        "TEXCOORD_0"
+      ],
+      "layout": {
+        "rows": [
+          {
+            "semantic": "POSITION",
+            "componentType": "i16",
+            "normalized": true,
+            "components": 3,
+            "bytesPerVertex": 6
+          },
+          {
+            "semantic": "NORMAL",
+            "componentType": "i8",
+            "normalized": false,
+            "components": 3,
+            "bytesPerVertex": 3
+          },
+          {
+            "semantic": "TEXCOORD_0",
+            "componentType": "u16",
+            "normalized": false,
+            "components": 2,
+            "bytesPerVertex": 4
+          }
+        ],
+        "bytesPerVertex": 13,
+        "alignedStride": 16,
+        "isQuantized": true
+      },
+      "quantization": true,
+      "extensionsUsed": [
+        "KHR_mesh_quantization"
+      ],
+      "images": [
+        {
+          "role": "baseColor",
+          "format": "image/jpeg",
+          "bytes": 456765,
+          "width": 1536,
+          "height": 1536,
+          "gpuWithMips": 12582912
+        },
+        {
+          "role": "normal",
+          "format": "image/jpeg",
+          "bytes": 55664,
+          "width": 768,
+          "height": 768,
+          "gpuWithMips": 3145728
+        },
+        {
+          "role": "metalRough",
+          "format": "image/jpeg",
+          "bytes": 192866,
+          "width": 768,
+          "height": 768,
+          "gpuWithMips": 3145728
+        }
+      ],
+      "textureGPUBytes": 18874368
+    }
+  ],
+  "cache": [
+    {
+      "tier": "preview",
+      "slug": "alatancheji",
+      "vertices": 27726,
+      "triangles": 29543,
+      "indicesReferenced": 27726,
+      "reuseRatio": 3.2,
+      "acmr32": 1.206,
+      "acmr16": 1.367,
+      "indexType": "u16"
+    },
+    {
+      "tier": "preview",
+      "slug": "guzangongbu",
+      "vertices": 25263,
+      "triangles": 27937,
+      "indicesReferenced": 25263,
+      "reuseRatio": 3.32,
+      "acmr32": 1.173,
+      "acmr16": 1.354,
+      "indexType": "u16"
+    },
+    {
+      "tier": "preview",
+      "slug": "harijilagen",
+      "vertices": 21880,
+      "triangles": 24509,
+      "indicesReferenced": 21880,
+      "reuseRatio": 3.36,
+      "acmr32": 1.156,
+      "acmr16": 1.33,
+      "indexType": "u16"
+    },
+    {
+      "tier": "preview",
+      "slug": "harinidun",
+      "vertices": 26397,
+      "triangles": 26828,
+      "indicesReferenced": 26397,
+      "reuseRatio": 3.05,
+      "acmr32": 1.256,
+      "acmr16": 1.434,
+      "indexType": "u16"
+    },
+    {
+      "tier": "preview",
+      "slug": "hejilagen",
+      "vertices": 24764,
+      "triangles": 31111,
+      "indicesReferenced": 24764,
+      "reuseRatio": 3.77,
+      "acmr32": 1.079,
+      "acmr16": 1.232,
+      "indexType": "u16"
+    },
+    {
+      "tier": "preview",
+      "slug": "hongguer",
+      "vertices": 31443,
+      "triangles": 35248,
+      "indicesReferenced": 31443,
+      "reuseRatio": 3.36,
+      "acmr32": 1.183,
+      "acmr16": 1.386,
+      "indexType": "u16"
+    },
+    {
+      "tier": "preview",
+      "slug": "jiangger",
+      "vertices": 19714,
+      "triangles": 22617,
+      "indicesReferenced": 19714,
+      "reuseRatio": 3.44,
+      "acmr32": 1.133,
+      "acmr16": 1.29,
+      "indexType": "u16"
+    },
+    {
+      "tier": "preview",
+      "slug": "mingyan",
+      "vertices": 21420,
+      "triangles": 24224,
+      "indicesReferenced": 21420,
+      "reuseRatio": 3.39,
+      "acmr32": 1.148,
+      "acmr16": 1.308,
+      "indexType": "u16"
+    },
+    {
+      "tier": "preview",
+      "slug": "naqinshanghuer",
+      "vertices": 20271,
+      "triangles": 22129,
+      "indicesReferenced": 20271,
+      "reuseRatio": 3.27,
+      "acmr32": 1.174,
+      "acmr16": 1.343,
+      "indexType": "u16"
+    },
+    {
+      "tier": "preview",
+      "slug": "saber",
+      "vertices": 27280,
+      "triangles": 29123,
+      "indicesReferenced": 27280,
+      "reuseRatio": 3.2,
+      "acmr32": 1.201,
+      "acmr16": 1.368,
+      "indexType": "u16"
+    },
+    {
+      "tier": "preview",
+      "slug": "sailihantabage",
+      "vertices": 21141,
+      "triangles": 24958,
+      "indicesReferenced": 21141,
+      "reuseRatio": 3.54,
+      "acmr32": 1.101,
+      "acmr16": 1.268,
+      "indexType": "u16"
+    },
+    {
+      "tier": "preview",
+      "slug": "sanala",
+      "vertices": 22663,
+      "triangles": 24051,
+      "indicesReferenced": 22663,
+      "reuseRatio": 3.18,
+      "acmr32": 1.193,
+      "acmr16": 1.354,
+      "indexType": "u16"
+    },
+    {
+      "tier": "detail",
+      "slug": "alatancheji",
+      "vertices": 135248,
+      "triangles": 193270,
+      "indicesReferenced": 135248,
+      "reuseRatio": 4.29,
+      "acmr32": 1.171,
+      "acmr16": 1.408,
+      "indexType": "u32"
+    },
+    {
+      "tier": "detail",
+      "slug": "guzangongbu",
+      "vertices": 123440,
+      "triangles": 182718,
+      "indicesReferenced": 123440,
+      "reuseRatio": 4.44,
+      "acmr32": 1.162,
+      "acmr16": 1.404,
+      "indexType": "u32"
+    },
+    {
+      "tier": "detail",
+      "slug": "harijilagen",
+      "vertices": 107787,
+      "triangles": 161366,
+      "indicesReferenced": 107787,
+      "reuseRatio": 4.49,
+      "acmr32": 1.13,
+      "acmr16": 1.381,
+      "indexType": "u32"
+    },
+    {
+      "tier": "detail",
+      "slug": "harinidun",
+      "vertices": 125537,
+      "triangles": 177026,
+      "indicesReferenced": 125537,
+      "reuseRatio": 4.23,
+      "acmr32": 1.22,
+      "acmr16": 1.493,
+      "indexType": "u32"
+    },
+    {
+      "tier": "detail",
+      "slug": "hejilagen",
+      "vertices": 126827,
+      "triangles": 202248,
+      "indicesReferenced": 126827,
+      "reuseRatio": 4.78,
+      "acmr32": 1.073,
+      "acmr16": 1.302,
+      "indexType": "u32"
+    },
+    {
+      "tier": "detail",
+      "slug": "hongguer",
+      "vertices": 149678,
+      "triangles": 225313,
+      "indicesReferenced": 149678,
+      "reuseRatio": 4.52,
+      "acmr32": 1.168,
+      "acmr16": 1.43,
+      "indexType": "u32"
+    },
+    {
+      "tier": "detail",
+      "slug": "jiangger",
+      "vertices": 160256,
+      "triangles": 252732,
+      "indicesReferenced": 160256,
+      "reuseRatio": 4.73,
+      "acmr32": 1.149,
+      "acmr16": 1.383,
+      "indexType": "u32"
+    },
+    {
+      "tier": "detail",
+      "slug": "mingyan",
+      "vertices": 108307,
+      "triangles": 159137,
+      "indicesReferenced": 108307,
+      "reuseRatio": 4.41,
+      "acmr32": 1.136,
+      "acmr16": 1.365,
+      "indexType": "u32"
+    },
+    {
+      "tier": "detail",
+      "slug": "naqinshanghuer",
+      "vertices": 102226,
+      "triangles": 146452,
+      "indicesReferenced": 102226,
+      "reuseRatio": 4.3,
+      "acmr32": 1.184,
+      "acmr16": 1.425,
+      "indexType": "u32"
+    },
+    {
+      "tier": "detail",
+      "slug": "saber",
+      "vertices": 129978,
+      "triangles": 188805,
+      "indicesReferenced": 129978,
+      "reuseRatio": 4.36,
+      "acmr32": 1.153,
+      "acmr16": 1.393,
+      "indexType": "u32"
+    },
+    {
+      "tier": "detail",
+      "slug": "sailihantabage",
+      "vertices": 107032,
+      "triangles": 163706,
+      "indicesReferenced": 107032,
+      "reuseRatio": 4.59,
+      "acmr32": 1.119,
+      "acmr16": 1.364,
+      "indexType": "u32"
+    },
+    {
+      "tier": "detail",
+      "slug": "sanala",
+      "vertices": 110469,
+      "triangles": 157106,
+      "indicesReferenced": 110469,
+      "reuseRatio": 4.27,
+      "acmr32": 1.149,
+      "acmr16": 1.386,
+      "indexType": "u32"
+    }
+  ],
+  "budgets": {
+    "detailTierTotalBytes": 83886080,
+    "detailTierTotalHuman": "80 MiB",
+    "cloudflareSingleFileBytes": 26214400,
+    "cloudflareSingleFileHuman": "25 MiB",
+    "wechatMainPackageBytes": 1572864,
+    "wechatMainPackageHuman": "1.5 MB",
+    "webFirstInteractiveBudgetMs": 2000,
+    "webDetailReadyBudgetMs": 8000
+  },
+  "budgetMetrics": {
+    "note": "两个指标分管两件事，不能混用。transfer = gzip 后的网络传输体积，决定用户实际下载多少和缓存占用；raw = GLB 原始体积，只受部署平台单文件上限约束。",
+    "transfer": "gzip 字节数（net）",
+    "raw": "GLB 原始字节数（disk/deploy）"
+  },
+  "tierBudgets": {
+    "preview": {
+      "transferBudget": 768000,
+      "transferBudgetHuman": "750 KiB",
+      "rawBudget": null,
+      "rawBudgetHuman": null
+    },
+    "detail": {
+      "transferBudget": 6291456,
+      "transferBudgetHuman": "6 MiB",
+      "rawBudget": 10485760,
+      "rawBudgetHuman": "10 MiB"
+    }
+  },
+  "originals": {
+    "jiangger": {
+      "sourceBytes": 87562740,
+      "originalTriangles": 1499884
+    },
+    "harinidun": {
+      "sourceBytes": 80620256,
+      "originalTriangles": 1500000
+    },
+    "alatancheji": {
+      "sourceBytes": 87203500,
+      "originalTriangles": 1498532
+    },
+    "hongguer": {
+      "sourceBytes": 83713240,
+      "originalTriangles": 1500074
+    },
+    "saber": {
+      "sourceBytes": 76065472,
+      "originalTriangles": 1499694
+    },
+    "mingyan": {
+      "sourceBytes": 80064048,
+      "originalTriangles": 1499872
+    },
+    "sanala": {
+      "sourceBytes": 81781212,
+      "originalTriangles": 1499976
+    },
+    "guzangongbu": {
+      "sourceBytes": 83519928,
+      "originalTriangles": 1499376
+    },
+    "harijilagen": {
+      "sourceBytes": 77959724,
+      "originalTriangles": 1499886
+    },
+    "hejilagen": {
+      "sourceBytes": 79369972,
+      "originalTriangles": 1499928
+    },
+    "naqinshanghuer": {
+      "sourceBytes": 84134252,
+      "originalTriangles": 1500000
+    },
+    "sailihantabage": {
+      "sourceBytes": 73409904,
+      "originalTriangles": 1499898
+    }
+  },
+  "problems": []
+}

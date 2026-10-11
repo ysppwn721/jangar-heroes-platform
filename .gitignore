@@ -1,0 +1,28 @@
+node_modules/
+dist/
+.cache/
+test-results/
+.env
+.env.*
+!.env.example
+*.log
+
+# 原始素材包（100 MB，本地留档，不入库）
+models.rar
+models2/
+
+# --- 本届新增的排除规则 ---
+# 生成页：由 scripts/gen-*.mjs 在构建期从 reports/ 与 src/data/ 重新生成。
+# 它们**必须**入库（评审要看、构建要用），因此显式不排除——这里只做说明，勿加规则。
+#   console.html / graph.html / ask.html  → 保留
+#
+# 迁移演示的产出：由 tools/make-toy-asset.mjs 程序化生成，可随时复现。
+# 但**输入资产与报告要入库**，因为它们是"可复用性"的证据（13 条断言的实测结果）。
+#   migration-demo/assets/       ← 保留（17 KB）
+#   migration-demo/report/       ← 保留（量化报告）
+#   migration-demo/models/       ← 生成物，可复现，不入库
+migration-demo/models/
+
+# 证据目录：截图与验收留档。体积可控（约 5 MB），且是提交材料要用的 10 张截图来源。
+# 如需精简仓库可放开下面一行，但提交前务必确认截图仍在。
+# test-results/shots/

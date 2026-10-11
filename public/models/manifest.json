@@ -1,0 +1,416 @@
+{
+  "generatedAt": "2026-10-11T11:39:15.782Z",
+  "generator": "scripts/assetctl.mjs --write-manifest",
+  "format": "Self-contained GLB 2.0 with KHR_mesh_quantization; native gzip transport, no external decoder",
+  "note": "本文件由 assetctl 从实际 GLB 二进制生成。修改资产后必须重跑 --write-manifest，否则 assetctl verify 会失败。",
+  "models": [
+    {
+      "file": "alatancheji.glb",
+      "sourceBytes": 87203500,
+      "originalTriangles": 1498532,
+      "bytes": 5140260,
+      "transferBytes": 3491171,
+      "triangles": 193270,
+      "vertices": 135248,
+      "bytesPerVertex": 38.01,
+      "indexType": "u32",
+      "textures": [
+        {
+          "role": "baseColor",
+          "format": "image/jpeg",
+          "width": 1536,
+          "height": 1536,
+          "bytes": 784834
+        },
+        {
+          "role": "normal",
+          "format": "image/jpeg",
+          "width": 768,
+          "height": 768,
+          "bytes": 93594
+        },
+        {
+          "role": "metalRough",
+          "format": "image/jpeg",
+          "width": 768,
+          "height": 768,
+          "bytes": 182699
+        }
+      ]
+    },
+    {
+      "file": "guzangongbu.glb",
+      "sourceBytes": 83519928,
+      "originalTriangles": 1499376,
+      "bytes": 4673696,
+      "transferBytes": 3144596,
+      "triangles": 182718,
+      "vertices": 123440,
+      "bytesPerVertex": 37.86,
+      "indexType": "u32",
+      "textures": [
+        {
+          "role": "baseColor",
+          "format": "image/jpeg",
+          "width": 1536,
+          "height": 1536,
+          "bytes": 672916
+        },
+        {
+          "role": "normal",
+          "format": "image/jpeg",
+          "width": 768,
+          "height": 768,
+          "bytes": 85223
+        },
+        {
+          "role": "metalRough",
+          "format": "image/jpeg",
+          "width": 768,
+          "height": 768,
+          "bytes": 116553
+        }
+      ]
+    },
+    {
+      "file": "harijilagen.glb",
+      "sourceBytes": 77959724,
+      "originalTriangles": 1499886,
+      "bytes": 4030900,
+      "transferBytes": 2678177,
+      "triangles": 161366,
+      "vertices": 107787,
+      "bytesPerVertex": 37.4,
+      "indexType": "u32",
+      "textures": [
+        {
+          "role": "baseColor",
+          "format": "image/jpeg",
+          "width": 1536,
+          "height": 1536,
+          "bytes": 566336
+        },
+        {
+          "role": "normal",
+          "format": "image/jpeg",
+          "width": 768,
+          "height": 768,
+          "bytes": 73041
+        },
+        {
+          "role": "metalRough",
+          "format": "image/jpeg",
+          "width": 768,
+          "height": 768,
+          "bytes": 52225
+        }
+      ]
+    },
+    {
+      "file": "harinidun.glb",
+      "sourceBytes": 80620256,
+      "originalTriangles": 1500000,
+      "bytes": 4482784,
+      "transferBytes": 2987695,
+      "triangles": 177026,
+      "vertices": 125537,
+      "bytesPerVertex": 35.71,
+      "indexType": "u32",
+      "textures": [
+        {
+          "role": "baseColor",
+          "format": "image/jpeg",
+          "width": 1536,
+          "height": 1536,
+          "bytes": 590863
+        },
+        {
+          "role": "normal",
+          "format": "image/jpeg",
+          "width": 768,
+          "height": 768,
+          "bytes": 71551
+        },
+        {
+          "role": "metalRough",
+          "format": "image/jpeg",
+          "width": 768,
+          "height": 768,
+          "bytes": 62405
+        }
+      ]
+    },
+    {
+      "file": "hejilagen.glb",
+      "sourceBytes": 79369972,
+      "originalTriangles": 1499928,
+      "bytes": 4766324,
+      "transferBytes": 3084739,
+      "triangles": 202248,
+      "vertices": 126827,
+      "bytesPerVertex": 37.58,
+      "indexType": "u32",
+      "textures": [
+        {
+          "role": "baseColor",
+          "format": "image/jpeg",
+          "width": 1536,
+          "height": 1536,
+          "bytes": 518527
+        },
+        {
+          "role": "normal",
+          "format": "image/jpeg",
+          "width": 768,
+          "height": 768,
+          "bytes": 59917
+        },
+        {
+          "role": "metalRough",
+          "format": "image/jpeg",
+          "width": 768,
+          "height": 768,
+          "bytes": 110480
+        }
+      ]
+    },
+    {
+      "file": "hongguer.glb",
+      "sourceBytes": 83713240,
+      "originalTriangles": 1500074,
+      "bytes": 5476244,
+      "transferBytes": 3585580,
+      "triangles": 225313,
+      "vertices": 149678,
+      "bytesPerVertex": 36.59,
+      "indexType": "u32",
+      "textures": [
+        {
+          "role": "baseColor",
+          "format": "image/jpeg",
+          "width": 1536,
+          "height": 1536,
+          "bytes": 569701
+        },
+        {
+          "role": "normal",
+          "format": "image/jpeg",
+          "width": 768,
+          "height": 768,
+          "bytes": 72923
+        },
+        {
+          "role": "metalRough",
+          "format": "image/jpeg",
+          "width": 768,
+          "height": 768,
+          "bytes": 182378
+        }
+      ]
+    },
+    {
+      "file": "jiangger.glb",
+      "sourceBytes": 87562740,
+      "originalTriangles": 1499884,
+      "bytes": 7167696,
+      "transferBytes": 5061562,
+      "triangles": 252732,
+      "vertices": 160256,
+      "bytesPerVertex": 44.73,
+      "indexType": "u32",
+      "textures": [
+        {
+          "role": "baseColor",
+          "format": "image/jpeg",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 1149163
+        },
+        {
+          "role": "normal",
+          "format": "image/jpeg",
+          "width": 2048,
+          "height": 2048,
+          "bytes": 675320
+        },
+        {
+          "role": "metalRough",
+          "format": "image/jpeg",
+          "width": 1024,
+          "height": 1024,
+          "bytes": 225433
+        }
+      ]
+    },
+    {
+      "file": "mingyan.glb",
+      "sourceBytes": 80064048,
+      "originalTriangles": 1499872,
+      "bytes": 4166144,
+      "transferBytes": 2824609,
+      "triangles": 159137,
+      "vertices": 108307,
+      "bytesPerVertex": 38.47,
+      "indexType": "u32",
+      "textures": [
+        {
+          "role": "baseColor",
+          "format": "image/jpeg",
+          "width": 1536,
+          "height": 1536,
+          "bytes": 673078
+        },
+        {
+          "role": "normal",
+          "format": "image/jpeg",
+          "width": 768,
+          "height": 768,
+          "bytes": 98768
+        },
+        {
+          "role": "metalRough",
+          "format": "image/jpeg",
+          "width": 768,
+          "height": 768,
+          "bytes": 74991
+        }
+      ]
+    },
+    {
+      "file": "naqinshanghuer.glb",
+      "sourceBytes": 84134252,
+      "originalTriangles": 1500000,
+      "bytes": 4014308,
+      "transferBytes": 2765355,
+      "triangles": 146452,
+      "vertices": 102226,
+      "bytesPerVertex": 39.27,
+      "indexType": "u32",
+      "textures": [
+        {
+          "role": "baseColor",
+          "format": "image/jpeg",
+          "width": 1536,
+          "height": 1536,
+          "bytes": 765270
+        },
+        {
+          "role": "normal",
+          "format": "image/jpeg",
+          "width": 768,
+          "height": 768,
+          "bytes": 120651
+        },
+        {
+          "role": "metalRough",
+          "format": "image/jpeg",
+          "width": 768,
+          "height": 768,
+          "bytes": 40354
+        }
+      ]
+    },
+    {
+      "file": "saber.glb",
+      "sourceBytes": 76065472,
+      "originalTriangles": 1499694,
+      "bytes": 4543652,
+      "transferBytes": 2946115,
+      "triangles": 188805,
+      "vertices": 129978,
+      "bytesPerVertex": 34.96,
+      "indexType": "u32",
+      "textures": [
+        {
+          "role": "baseColor",
+          "format": "image/jpeg",
+          "width": 1536,
+          "height": 1536,
+          "bytes": 487902
+        },
+        {
+          "role": "normal",
+          "format": "image/jpeg",
+          "width": 768,
+          "height": 768,
+          "bytes": 67801
+        },
+        {
+          "role": "metalRough",
+          "format": "image/jpeg",
+          "width": 768,
+          "height": 768,
+          "bytes": 30901
+        }
+      ]
+    },
+    {
+      "file": "sailihantabage.glb",
+      "sourceBytes": 73409904,
+      "originalTriangles": 1499898,
+      "bytes": 3861048,
+      "transferBytes": 2494544,
+      "triangles": 163706,
+      "vertices": 107032,
+      "bytesPerVertex": 36.07,
+      "indexType": "u32",
+      "textures": [
+        {
+          "role": "baseColor",
+          "format": "image/jpeg",
+          "width": 1536,
+          "height": 1536,
+          "bytes": 420222
+        },
+        {
+          "role": "normal",
+          "format": "image/jpeg",
+          "width": 768,
+          "height": 768,
+          "bytes": 44396
+        },
+        {
+          "role": "metalRough",
+          "format": "image/jpeg",
+          "width": 768,
+          "height": 768,
+          "bytes": 38873
+        }
+      ]
+    },
+    {
+      "file": "sanala.glb",
+      "sourceBytes": 81781212,
+      "originalTriangles": 1499976,
+      "bytes": 4028336,
+      "transferBytes": 2691633,
+      "triangles": 157106,
+      "vertices": 110469,
+      "bytesPerVertex": 36.47,
+      "indexType": "u32",
+      "textures": [
+        {
+          "role": "baseColor",
+          "format": "image/jpeg",
+          "width": 1536,
+          "height": 1536,
+          "bytes": 456765
+        },
+        {
+          "role": "normal",
+          "format": "image/jpeg",
+          "width": 768,
+          "height": 768,
+          "bytes": 55664
+        },
+        {
+          "role": "metalRough",
+          "format": "image/jpeg",
+          "width": 768,
+          "height": 768,
+          "bytes": 192866
+        }
+      ]
+    }
+  ]
+}

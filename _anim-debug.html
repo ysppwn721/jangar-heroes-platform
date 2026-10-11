@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>骨骼动画预览 · 江格尔待机</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #101413; color: #e8e2d4;
+         font: 13px/1.6 system-ui, -apple-system, "Microsoft YaHei", sans-serif; }
+  header { padding: 12px 16px; border-bottom: 1px solid #2a3532; }
+  h1 { margin: 0 0 4px; font-size: 15px; font-weight: 600; }
+  .hint { color: #8fa39c; font-size: 12px; }
+  .hint b { color: #cbb887; }
+  .bar { display: flex; gap: 10px; align-items: center; padding: 10px 16px;
+         border-bottom: 1px solid #2a3532; flex-wrap: wrap; }
+  button { background: #182220; border: 1px solid #33413d; color: #cfe0da;
+           padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; }
+  button.on { background: #cbb887; border-color: #e6d3a3; color: #1a2420; font-weight: 600; }
+  .stage { position: relative; height: calc(100vh - 168px); background: #0b0f0e; }
+  .meta { position: absolute; z-index: 2; bottom: 12px; left: 14px; font-size: 11px;
+          color: #93a6a0; background: rgba(0,0,0,.5); padding: 5px 10px; border-radius: 5px; }
+  .err { position: absolute; z-index: 3; top: 50%; left: 50%; transform: translate(-50%,-50%);
+         color: #e0a08a; text-align: center; }
+  canvas { display: block; }
+</style>
+</head>
+<body>
+<header>
+  <h1>骨骼动画预览 · 江格尔待机（4 秒循环）</h1>
+  <div class="hint">
+    这是最终形态：<b>15 万面</b>几何 + <b>28 骨骼</b>蒙皮 + <b>原贴图</b> + 待机动画。
+    请重点看：<b>呼吸起伏是否自然</b>、<b>有没有穿模或抽搐</b>、<b>循环处是否跳帧</b>。
+  </div>
+</header>
+<div class="bar">
+  <button id="btn-play" class="on">暂停</button>
+  <button id="btn-slow">慢速 0.3x</button>
+  <button id="btn-rot">自动旋转</button>
+  <span class="hint">幅度：</span>
+  <button id="btn-s08">0.22%</button>
+  <button id="btn-s12">0.32%</button>
+  <button id="btn-s16">0.43%</button>
+  <button id="btn-b2">0.54%</button>
+  <span class="hint">｜</span>
+  <button id="btn-greet" style="border-color:#cbb887">▶ 播放抱拳（点一下的反应）</button>
+  <span class="hint" id="anim-info">加载中…</span>
+</div>
+<div class="stage" id="stage">
+  <div class="meta" id="meta">加载中…</div>
+</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "http://127.0.0.1:8099/node_modules/three/build/three.module.js",
+    "three/addons/": "http://127.0.0.1:8099/node_modules/three/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+const stage = document.getElementById('stage');
+const metaEl = document.getElementById('meta');
+const infoEl = document.getElementById('anim-info');
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(2, window.devicePixelRatio));
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.shadowMap.enabled = false;
+stage.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0b0f0e);
+
+const camera = new THREE.PerspectiveCamera(38, 1, 0.01, 100);
+camera.position.set(0, 0.35, 3.0);
+
+const key = new THREE.DirectionalLight(0xfff2dd, 2.1);
+key.position.set(2.5, 4, 3); scene.add(key);
+const fill = new THREE.DirectionalLight(0xbfd6e8, 0.9);
+fill.position.set(-3, 2, 1.5); scene.add(fill);
+const rim = new THREE.DirectionalLight(0xffe9c2, 1.1);
+rim.position.set(0, 2.5, -4); scene.add(rim);
+scene.add(new THREE.HemisphereLight(0xdfe9ff, 0x2a2520, 0.7));
+
+// 地面上加一块淡网格，方便判断"脚是否踩实"
+const grid = new THREE.GridHelper(4, 20, 0x33413d, 0x1e2a27);
+grid.position.y = -1.0;
+scene.add(grid);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+controls.target.set(0, 0, 0);
+
+function resize() {
+  const w = stage.clientWidth, h = stage.clientHeight;
+  renderer.setSize(w, h);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+}
+window.addEventListener('resize', resize);
+
+let mixer = null;
+let idleAction = null;
+let greetAction = null;
+let playing = true;
+let slow = false;
+let autoRotate = false;
+let modelRoot = null;
+let currentTier = 's12';
+
+const clock = new THREE.Clock();
+
+// 两档幅度：第一版按"6mm"设计，实测只有身高的 0.14%，看不出在动（用户反馈"没动"）。
+// 现在改成按身高的百分比给，并保留两档供对比。
+const TIERS = {
+  s08: { url: 'http://127.0.0.1:8099/deployment-assets/models-rigged/anim-0_8.glb', label: '幅度 0.22%' },
+  s12: { url: 'http://127.0.0.1:8099/deployment-assets/models-rigged/anim-1_2.glb', label: '幅度 0.32%' },
+  s16: { url: 'http://127.0.0.1:8099/deployment-assets/models-rigged/anim-1_6.glb', label: '幅度 0.43%' },
+  b2: { url: 'http://127.0.0.1:8099/deployment-assets/models-rigged/anim-2_0.glb', label: '幅度 0.54%' }
+};
+
+function animate() {
+  requestAnimationFrame(animate);
+  const dt = clock.getDelta();
+  if (mixer) mixer.update(dt * (slow ? 0.3 : 1));
+  if (autoRotate) {
+    const r = 3.0;
+    const t = clock.elapsedTime * 0.4;
+    camera.position.x = Math.sin(t) * r;
+    camera.position.z = Math.cos(t) * r;
+    camera.lookAt(controls.target);
+  }
+  controls.update();
+  renderer.render(scene, camera);
+}
+
+const loader = new GLTFLoader();
+let modelRoot = null;
+
+function loadTier(key) {
+  currentTier = key;
+  for (const k of Object.keys(TIERS)) {
+    const el = document.getElementById('btn-' + k);
+    if (el) el.classList.toggle('on', k === key);
+  }
+  if (modelRoot) { scene.remove(modelRoot); modelRoot = null; }
+  mixer = null; idleAction = null; greetAction = null;
+  metaEl.textContent = '加载中… ' + TIERS[key].url;
+
+  loader.load(TIERS[key].url, gltf => {
+    const root = gltf.scene;
+    let tris = 0, verts = 0, skinned = 0;
+    root.traverse(o => {
+      if (!o.isMesh) return;
+      const g = o.geometry;
+      verts += g.attributes.position ? g.attributes.position.count : 0;
+      if (g.index) tris += g.index.count / 3;
+      if (o.isSkinnedMesh) skinned++;
+    });
+    const box = new THREE.Box3().setFromObject(root);
+    const size = new THREE.Vector3(), center = new THREE.Vector3();
+    box.getSize(size); box.getCenter(center);
+    const maxDim = Math.max(size.x, size.y, size.z) || 1;
+    root.position.sub(center);
+    const s = 2.0 / maxDim;
+    root.scale.setScalar(s);
+    root.position.multiplyScalar(s);
+    scene.add(root);
+    modelRoot = root;
+    grid.position.y = -1.0;
+
+    if (gltf.animations && gltf.animations.length) {
+      mixer = new THREE.AnimationMixer(root);
+      // 按名字挑：GLB 里有两段 —— Idle（循环）与 Greet（单次，点一下的反应）
+      const clips = gltf.animations;
+      const idleClip = clips.find(c => /idle/i.test(c.name)) || clips[0];
+      const greetClip = clips.find(c => /greet/i.test(c.name));
+      idleAction = mixer.clipAction(idleClip);
+      idleAction.setLoop(THREE.LoopRepeat);
+      idleAction.play();
+      if (greetClip) {
+        greetAction = mixer.clipAction(greetClip);
+        greetAction.setLoop(THREE.LoopOnce);
+        greetAction.clampWhenFinished = false;
+      }
+      mixer.timeScale = playing ? 1 : 0;
+      infoEl.textContent = clips.map(c => `${c.name}(${c.duration.toFixed(1)}s)`).join(' + ');
+      const greetBtn = document.getElementById('btn-greet');
+      greetBtn.disabled = !greetClip;
+      greetBtn.style.opacity = greetClip ? '1' : '.4';
+    } else {
+      infoEl.textContent = '未找到动画';
+    }
+    metaEl.textContent = `${Math.round(tris).toLocaleString()} 三角面 · ${verts.toLocaleString()} 顶点 · `
+      + `${skinned} 个蒙皮网格 · ${TIERS[key].label}`;
+  }, undefined, err => {
+    metaEl.innerHTML = `<span class="err">加载失败：${TIERS[key].url}<br>${err && err.message ? err.message : err}</span>`;
+  });
+}
+
+for (const k of Object.keys(TIERS)) {
+  const btn = document.getElementById('btn-' + k);
+  if (btn) btn.onclick = () => loadTier(k);
+}
+// 「点一下的反应」：演示交互动作怎么触发 —— 交叉淡入 Greet，播完自动回到 Idle
+document.getElementById('btn-greet').onclick = () => {
+  if (!greetAction || !idleAction) return;
+  greetAction.reset();
+  greetAction.setEffectiveWeight(1);
+  greetAction.fadeIn(0.25).play();
+  idleAction.fadeOut(0.25);
+  setTimeout(() => {
+    if (!idleAction) return;
+    idleAction.reset();
+    idleAction.setEffectiveWeight(1);
+    idleAction.fadeIn(0.35).play();
+    if (greetAction) greetAction.fadeOut(0.35);
+  }, 3000 - 350);
+};
+loadTier('s12');
+
+document.getElementById('btn-play').onclick = e => {
+  playing = !playing;
+  if (mixer) mixer.timeScale = playing ? 1 : 0;
+  e.target.textContent = playing ? '暂停' : '播放';
+  e.target.classList.toggle('on', playing);
+};
+document.getElementById('btn-slow').onclick = e => {
+  slow = !slow;
+  e.target.classList.toggle('on', slow);
+  e.target.textContent = slow ? '恢复 1.0x' : '慢速 0.3x';
+};
+document.getElementById('btn-rot').onclick = e => {
+  autoRotate = !autoRotate;
+  e.target.classList.toggle('on', autoRotate);
+};
+
+resize();
+animate();
+</script>
+</body>
+</html>

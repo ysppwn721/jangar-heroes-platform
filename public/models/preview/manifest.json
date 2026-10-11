@@ -1,0 +1,150 @@
+{
+  "generatedAt": "2026-09-14T11:56:42.132Z",
+  "format": "Self-contained GLB 2.0 with KHR_mesh_quantization; native gzip transport, no external decoder",
+  "models": [
+    {
+      "file": "jiangger.glb",
+      "originalBytes": 9164928,
+      "sourceBytes": 87562740,
+      "bytes": 593624,
+      "transferBytes": 531196,
+      "originalTriangles": 1499884,
+      "triangles": 22617,
+      "vertices": 19714,
+      "bytesPerVertex": 30.11,
+      "indexType": "u16"
+    },
+    {
+      "file": "harinidun.glb",
+      "originalBytes": 8415516,
+      "sourceBytes": 80620256,
+      "bytes": 654272,
+      "transferBytes": 567468,
+      "originalTriangles": 1500000,
+      "triangles": 26828,
+      "vertices": 26397,
+      "bytesPerVertex": 24.79,
+      "indexType": "u16"
+    },
+    {
+      "file": "alatancheji.glb",
+      "originalBytes": 9146672,
+      "sourceBytes": 87203500,
+      "bytes": 755408,
+      "transferBytes": 662499,
+      "originalTriangles": 1498532,
+      "triangles": 29543,
+      "vertices": 27726,
+      "bytesPerVertex": 27.25,
+      "indexType": "u16"
+    },
+    {
+      "file": "hongguer.glb",
+      "originalBytes": 8913464,
+      "sourceBytes": 83713240,
+      "bytes": 779760,
+      "transferBytes": 678275,
+      "originalTriangles": 1500074,
+      "triangles": 35248,
+      "vertices": 31443,
+      "bytesPerVertex": 24.8,
+      "indexType": "u16"
+    },
+    {
+      "file": "saber.glb",
+      "originalBytes": 7902928,
+      "sourceBytes": 76065472,
+      "bytes": 648204,
+      "transferBytes": 559088,
+      "originalTriangles": 1499694,
+      "triangles": 29123,
+      "vertices": 27280,
+      "bytesPerVertex": 23.76,
+      "indexType": "u16"
+    },
+    {
+      "file": "mingyan.glb",
+      "originalBytes": 8413216,
+      "sourceBytes": 80064048,
+      "bytes": 592588,
+      "transferBytes": 522865,
+      "originalTriangles": 1499872,
+      "triangles": 24224,
+      "vertices": 21420,
+      "bytesPerVertex": 27.67,
+      "indexType": "u16"
+    },
+    {
+      "file": "sanala.glb",
+      "originalBytes": 8715836,
+      "sourceBytes": 81781212,
+      "bytes": 570776,
+      "transferBytes": 496352,
+      "originalTriangles": 1499976,
+      "triangles": 24051,
+      "vertices": 22663,
+      "bytesPerVertex": 25.19,
+      "indexType": "u16"
+    },
+    {
+      "file": "guzangongbu.glb",
+      "originalBytes": 8757560,
+      "sourceBytes": 83519928,
+      "bytes": 674356,
+      "transferBytes": 593798,
+      "originalTriangles": 1499376,
+      "triangles": 27937,
+      "vertices": 25263,
+      "bytesPerVertex": 26.69,
+      "indexType": "u16"
+    },
+    {
+      "file": "harijilagen.glb",
+      "originalBytes": 8140496,
+      "sourceBytes": 77959724,
+      "bytes": 574616,
+      "transferBytes": 505478,
+      "originalTriangles": 1499886,
+      "triangles": 24509,
+      "vertices": 21880,
+      "bytesPerVertex": 26.26,
+      "indexType": "u16"
+    },
+    {
+      "file": "hejilagen.glb",
+      "originalBytes": 8238552,
+      "sourceBytes": 79369972,
+      "bytes": 650268,
+      "transferBytes": 572051,
+      "originalTriangles": 1499928,
+      "triangles": 31111,
+      "vertices": 24764,
+      "bytesPerVertex": 26.26,
+      "indexType": "u16"
+    },
+    {
+      "file": "naqinshanghuer.glb",
+      "originalBytes": 8633452,
+      "sourceBytes": 84134252,
+      "bytes": 585124,
+      "transferBytes": 516280,
+      "originalTriangles": 1500000,
+      "triangles": 22129,
+      "vertices": 20271,
+      "bytesPerVertex": 28.87,
+      "indexType": "u16"
+    },
+    {
+      "file": "sailihantabage.glb",
+      "originalBytes": 7629968,
+      "sourceBytes": 73409904,
+      "bytes": 528268,
+      "transferBytes": 460883,
+      "originalTriangles": 1499898,
+      "triangles": 24958,
+      "vertices": 21141,
+      "bytesPerVertex": 24.99,
+      "indexType": "u16"
+    }
+  ]
+}
