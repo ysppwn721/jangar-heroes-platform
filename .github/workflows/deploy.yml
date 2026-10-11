@@ -28,6 +28,27 @@ jobs:
           node-version: 22
       - name: Validate models and build the static site
         run: npm run build
+      - name: Assert the artifact is actually deployable
+        # 构建成功不等于产物可部署。这一步在**上传之前**断言：
+        #   ① 四个交付页与 404 页都在；
+        #   ② 没有任何运行时 fetch（ask.html 的语料是内联的，缺了会静默变空）；
+        #   ③ .nojekyll 在（否则 GitHub Pages 的 Jekyll 会丢掉 _headers）。
+        # 任何一条不满足就直接失败，避免"部署成功但站点是坏的"。
+        run: |
+          set -e
+          for f in index.html console.html graph.html ask.html 404.html robots.txt sitemap.xml .nojekyll; do
+            test -f "dist/$f" || { echo "::error::dist/$f 缺失"; exit 1; }
+          done
+          test -f dist/_headers || { echo "::error::dist/_headers 缺失（缓存与安全响应头）"; exit 1; }
+          if grep -qE 'fetch\(|XMLHttpRequest' dist/ask.html; then
+            echo "::error::dist/ask.html 含运行时数据请求，离线与静态托管回退下会静默失效"
+            exit 1
+          fi
+          if grep -q 'jiangger.example' dist/index.html; then
+            echo "::warning::站点仍使用占位域名，og:image 与 canonical 会指向不存在的域名。"
+            echo "::warning::如需修正，请设置仓库变量 SITE_ORIGIN 后重新构建。"
+          fi
+          echo "产物检查通过：$(ls dist | wc -l) 个顶层条目"
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
