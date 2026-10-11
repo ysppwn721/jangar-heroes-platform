@@ -273,7 +273,15 @@ await fs.writeFile(swPath, sw);
 console.log(`离线外壳：${precache.list.length} 项 / ${(measured.bytes / 1048576).toFixed(2)} MiB`
   + `（预算 ${(PRECACHE_BUDGET / 1048576).toFixed(0)} MiB），首屏预置 ${precache.previewSlugs.length} 尊预览模型，build ${buildId}`);
 
+// .nojekyll：GitHub Pages 默认用 Jekyll 处理站点，而 Jekyll 会**忽略下划线开头的
+// 文件与目录**——本项目 dist/ 里有 `_headers`（缓存与安全响应头）。缺了它，
+// 那些文件会被静默丢掉，表现为"本地正常、线上的响应头不对"。
 await fs.writeFile(path.join(destination, '.nojekyll'), '');
+const dotNojekyll = await fs.stat(path.join(destination, '.nojekyll')).catch(() => null);
+if (!dotNojekyll) throw new Error('dist/.nojekyll 未能写入——GitHub Pages 会丢掉 _headers');
+if ((await fs.readdir(destination)).some(n => n.startsWith('_'))) {
+  console.log('.nojekyll：已写入（保护 dist/ 里下划线开头的文件不被 Jekyll 丢弃）');
+}
 
 // robots.txt 与 sitemap.xml：URL 必须是绝对地址，因此按 SITE_ORIGIN 构建期生成。
 // 未设置时用占位域名并在文件里留注释——"忘了改"是可见的，而不是静默产出坏 sitemap。

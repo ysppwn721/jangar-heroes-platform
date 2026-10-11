@@ -16,11 +16,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          sparse-checkout: |
-            src
-            scripts
-            public
-          sparse-checkout-cone-mode: true
+          # ⚠️ 不要用 sparse-checkout 收窄检出范围。
+          # 这里原先只检出 src / scripts / public，而 `npm run build` 需要根层的
+          # package.json、index.html、style.css、script.js、assetctl.config.json
+          # ——实测 CI 因此直接失败（Actions run #1）。
+          # 仓库 108 MB（主要是 public/models 的双级三维模型，构建必须用到），
+          # 全量检出是最稳的选择；想省流量可以显式逐项列出所需的每个路径。
+          fetch-depth: 1
       - uses: actions/setup-node@v4
         with:
           node-version: 22
