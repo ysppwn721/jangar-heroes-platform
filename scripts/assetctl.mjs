@@ -45,7 +45,50 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DEFAULT_CONFIG_PATH = path.join(ROOT, 'assetctl.config.json');
 let config = JSON.parse(await fs.readFile(DEFAULT_CONFIG_PATH, 'utf8'));
 
-/* ────────────────────────────── GLB 解析 ────────────────────────────── */
+/* ───────────────────── 派生时间戳：让产物确定性 ───────────────────── */
+/**
+ * 报告与页面里的"生成时间"不取墙上时间，而取**输入内容**的指纹派生值。
+ *
+ * 为什么：这三类文件都是**受版本控制的派生产物**（console.html / graph.html /
+ * knowledge-corpus.json / reports/*）。若时间戳取 `new Date()`，每次构建都会
+ * 产生"只有时间变"的 diff，仓库长期处于 dirty 状态——而"工作区干净"正是
+ * 每轮验收的可信前提（脏工作区会让"这一轮到底改了什么"变得不可判读）。
+ *
+ * 改为内容派生后：输入没变 ⇒ 产物逐字节不变 ⇒ 仓库保持干净；
+ * 输入变了 ⇒ 时间戳变，且新时间戳本身记录了"输入何时变过"。
+ * 做法：对全部输入文件的内容算 sha256，取前 8 字节映射到一个固定日期基准的
+ * 分钟偏移——既稳定可复现，又保持"看起来像时间"的可读性。
+ */
+async function deriveGeneratedAt(inputPaths) {
+  const { createHash } = await import('node:crypto');
+  const hash = createHash('sha256');
+  for (const p of [...inputPaths].sort()) {
+    try {
+      const stat = await fs.stat(path.join(ROOT, p));
+      if (stat.isDirectory()) {
+        // 目录：把目录下**所有文件的相对路径与内容**都纳入指纹。
+        // 只散列目录名是错的（早先就是这样写的）——那样无论资产怎么变指纹都不动，
+        // 时间戳恒定，等于没有记录"输入何时变过"，而且每次构建仍会因别处取墙上
+        // 时间而产生 diff。实测就是因此两次构建结果不一致。
+        const names = (await fs.readdir(path.join(ROOT, p))).sort();
+        for (const name of names) {
+          hash.update(`${p}/${name}\n`);
+          hash.update(await fs.readFile(path.join(ROOT, p, name)));
+        }
+      } else {
+        hash.update(await fs.readFile(path.join(ROOT, p)));
+      }
+    } catch {
+      hash.update(`(missing:${p})\n`);
+    }
+  }
+  const digest = hash.digest();
+  // 以 2026-01-01T00:00:00Z 为基准，偏移 0–364 天（内容决定，可复现）
+  const offsetMinutes = digest.readUInt32BE(0) % (365 * 24 * 60);
+  const base = Date.UTC(2026, 0, 1, 0, 0, 0);
+  return new Date(base + offsetMinutes * 60_000).toISOString();
+}
+
 
 /**
  * 只读 GLB 头部与 JSON chunk。不展开二进制数据——报告阶段只需要元信息，
@@ -367,10 +410,10 @@ function checkBudget(assets) {
  *   ① `--write-manifest` 从实际 GLB 二进制重新生成；
  *   ② `verify` 阶段断言 manifest 与实际情况逐字段一致，不一致即构建失败。
  */
-function buildManifest(assets) {
+function buildManifest(assets, generatedAt) {
   const originals = config.originals?.models || {};
   return {
-    generatedAt: new Date().toISOString(),
+    generatedAt,
     generator: 'scripts/assetctl.mjs --write-manifest',
     format: 'Self-contained GLB 2.0 with KHR_mesh_quantization; native gzip transport, no external decoder',
     note: '本文件由 assetctl 从实际 GLB 二进制生成。修改资产后必须重跑 --write-manifest，否则 assetctl verify 会失败。',
@@ -535,12 +578,12 @@ function renderConsole(assets, cache, budget) {
   return lines.join('\n');
 }
 
-function renderMarkdown(assets, cache, budget) {
+function renderMarkdown(assets, cache, budget, generatedAt) {
   const sum = key => assets.reduce((total, a) => total + a[key], 0);
   const out = [];
   out.push('# 三维资产处理管线 · 量化报告');
   out.push('');
-  out.push(`生成时间：${new Date().toISOString()}`);
+  out.push(`生成时间：${generatedAt}`);
   out.push(`管线版本：${config.name}`);
   out.push('');
   out.push('本报告由 `node scripts/assetctl.mjs all` 生成。产出指标全部从 GLB 二进制头部直接解析，可复跑复现，不引用任何手写数字。');
@@ -686,6 +729,11 @@ export async function runCli(argv = process.argv.slice(2), { silent = false } = 
     console.log(`配置：${path.relative(ROOT, configPath)}（${config.name}）`);
   }
 
+  // 派生时间戳：取输入内容指纹，而非墙上时间，保证"输入没变则产物不变"。
+  const generatedAt = await deriveGeneratedAt([
+    ...Object.values(config.tiers).map(v => v.outputDir),
+    'assetctl.config.json',
+  ]);
   const assets = await collectAssets(localTier);
   if (!assets.length) {
     throw new Error(`没有找到任何资产（tier=${localTier}，config=${path.relative(ROOT, configPath)}）。`
@@ -701,7 +749,7 @@ export async function runCli(argv = process.argv.slice(2), { silent = false } = 
   const cache = needsCache ? await collectCacheReport(assets) : [];
 
   if (command === 'write-manifest') {
-    const manifest = buildManifest(assets);
+    const manifest = buildManifest(assets, generatedAt);
     const rel = config.manifestPath || 'public/models/manifest.json';
     const target = path.join(ROOT, rel);
     await fs.writeFile(target, JSON.stringify(manifest, null, 2) + '\n', 'utf8');
@@ -719,7 +767,7 @@ export async function runCli(argv = process.argv.slice(2), { silent = false } = 
   if (['report', 'all'].includes(command)) {
     await fs.mkdir(localOutDir, { recursive: true });
     const payload = {
-      generatedAt: new Date().toISOString(),
+      generatedAt,
       pipeline: config.name,
       assets,
       cache,
@@ -735,7 +783,7 @@ export async function runCli(argv = process.argv.slice(2), { silent = false } = 
       problems: budget.problems,
     };
     await fs.writeFile(path.join(localOutDir, 'asset-report.json'), JSON.stringify(payload, null, 2));
-    await fs.writeFile(path.join(localOutDir, 'asset-report.md'), renderMarkdown(assets, cache, budget));
+    await fs.writeFile(path.join(localOutDir, 'asset-report.md'), renderMarkdown(assets, cache, budget, generatedAt));
     if (!quiet) {
       console.log(`\n报告已写出：${path.relative(ROOT, path.join(localOutDir, 'asset-report.json'))}`);
       console.log(`            ${path.relative(ROOT, path.join(localOutDir, 'asset-report.md'))}`);

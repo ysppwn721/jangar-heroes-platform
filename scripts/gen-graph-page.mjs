@@ -51,7 +51,9 @@ export const runGen = async () => {
 
   /* 只把图谱数据喂给页面；渲染与交互在浏览器里做 */
   const payload = {
-    generatedAt: new Date().toISOString(),
+    // 时间戳取自数据集自身，不取墙上时间——否则每次构建都产生"只有时间变"的
+    // diff，仓库长期 dirty，而"工作区干净"是每轮验收的可信前提。
+    generatedAt: graph.meta?.generatedAt || graph.meta?.provenanceNormalizedAt || '2026-10-11T00:00:00.000Z',
     nodes: nodes.map(n => ({
       id: n.id,
       name: n.name,

@@ -47,6 +47,32 @@ for (const p of PAGES) {
 }
 if (!mdHits) console.log('  ✓ 无残留');
 
+// 占位域名残留：SITE_ORIGIN 未设时会写入 og:url / canonical / robots / sitemap。
+// 这不是可有可无的提醒——og:image 与 canonical 都指向不存在的域名时，
+// 分享卡图会裂、搜索引擎会按错误域名收录。构建时给警告，但**不阻断构建**
+// （因为本地开发本来就没有真实域名）；部署前用 `--strict` 让它变成硬失败。
+const PLACEHOLDER = 'jiangger.example';
+const strict = process.argv.includes('--strict');
+const placeholderHits = [];
+for (const file of ['index.html', 'console.html', 'graph.html', 'ask.html', 'robots.txt', 'sitemap.xml']) {
+  let text;
+  try { text = fs.readFileSync(`dist/${file}`, 'utf8'); } catch { continue; }
+  const n = text.split(PLACEHOLDER).length - 1;
+  if (n) placeholderHits.push(`${file}×${n}`);
+}
+console.log('\n占位域名残留（SITE_ORIGIN 未设时的预期结果）：');
+if (placeholderHits.length) {
+  const line = `  ${strict ? '✗' : '⚠'} ${placeholderHits.join('  ')}`;
+  console.log(line);
+  console.log(`      部署前请运行：SITE_ORIGIN=https://真实域名 npm run build`);
+  if (strict) {
+    console.log('      （--strict 模式：占位域名视为失败）');
+    mdHits += 1; // 计入失败
+  }
+} else {
+  console.log('  ✓ 无占位域名（SITE_ORIGIN 已生效）');
+}
+
 console.log('\n' + '='.repeat(78));
 console.log(problems === 0 && oldHits === 0 && mdHits === 0
   ? '✓ 全部通过'

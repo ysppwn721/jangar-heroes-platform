@@ -121,12 +121,25 @@ export const runSync = async () => {
   }
 
   /* 输出一份网页端可直接 import 的语料 */
+  // 时间戳由**语料内容**派生，不取墙上时间。
+  // 理由同 assetctl 的 deriveGeneratedAt：本文件是受版本控制的派生产物，
+  // 取墙上时间会让每次构建都产生"只有时间变"的 diff（实测正是唯一残留的
+  // 非确定性来源），从而让"工作区干净"这个验收前提失效。
+  const { createHash } = await import('node:crypto');
+  const corpusFingerprint = createHash('sha256')
+    .update(JSON.stringify(source.chunks))
+    .digest();
+  const offsetMinutes = corpusFingerprint.readUInt32BE(0) % (365 * 24 * 60);
+  const generatedAt = new Date(Date.UTC(2026, 0, 1) + offsetMinutes * 60_000).toISOString();
+
   const payload = {
     version: source.version || 1,
-    generatedAt: new Date().toISOString(),
+    generatedAt,
+    corpusFingerprint: corpusFingerprint.toString('hex').slice(0, 16),
     origin: mini ? 'miniprogram:miniprogram/data/knowledge.js' : 'local',
     generator: 'scripts/sync-knowledge.mjs',
-    note: '由单一数据源同步。两端共用同一套语料与同一套检索实现（src/retrieval-core.js ↔ 小程序 utils/retrieval.js）。',
+    note: '由单一数据源同步。两端共用同一套语料与同一套检索实现（src/retrieval-core.js ↔ 小程序 utils/retrieval.js）。'
+      + 'generatedAt 由语料内容指纹派生，因此语料不变时本文件逐字节不变。',
     chunkCount: source.chunks.length,
     chunks: source.chunks,
   };

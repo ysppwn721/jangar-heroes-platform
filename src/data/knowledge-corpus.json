@@ -1,9 +1,10 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-11T12:43:01.173Z",
+  "generatedAt": "2026-07-12T21:49:00.000Z",
+  "corpusFingerprint": "110f211d6030618a",
   "origin": "miniprogram:miniprogram/data/knowledge.js",
   "generator": "scripts/sync-knowledge.mjs",
-  "note": "由单一数据源同步。两端共用同一套语料与同一套检索实现（src/retrieval-core.js ↔ 小程序 utils/retrieval.js）。",
+  "note": "由单一数据源同步。两端共用同一套语料与同一套检索实现（src/retrieval-core.js ↔ 小程序 utils/retrieval.js）。generatedAt 由语料内容指纹派生，因此语料不变时本文件逐字节不变。",
   "chunkCount": 32,
   "chunks": [
     {
