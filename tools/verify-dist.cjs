@@ -129,6 +129,42 @@ async function fetchStatus(url) {
     if (!ok) failures.push(`index.html 未链接 ${page}`);
   }
 
+  /* ⑥ 404 语义：不存在的路径必须返回 404，而不是"200 + 首页" */
+  // 这一条防的是"软 404"：静态托管普遍会在找不到路径时回退返回 index.html，
+  // 后果有两个，都很实际——
+  //   ① 打错入口的人看到首页，会以为"内容缺失"或"链接是假的"；
+  //   ② /robots.txt、/sitemap.xml 这类被写错的路径也会返回 HTML，
+  //      爬虫拿 HTML 当 sitemap 解析，收录直接失败。
+  // 这类行为只有脚本能守住，肉眼在浏览器里点不出来。
+  console.log('\n⑥ 404 语义');
+  const notFoundProbes = [
+    '/this-page-does-not-exist.html',
+    '/nope',
+    '/src/data/missing.json',
+    '/nonexistent/deep/path.js',
+  ];
+  for (const probe of notFoundProbes) {
+    try {
+      const res = await fetch(`${BASE}${probe}`);
+      const type = res.headers.get('content-type') || '';
+      const is404 = res.status === 404;
+      const isHtml = type.includes('text/html');
+      console.log(`  ${is404 && isHtml ? '✓' : '✗'} ${probe.padEnd(32)} ${res.status} ${type.split(';')[0]}`);
+      if (!is404) failures.push(`${probe} 返回 ${res.status}，应为 404（软 404：回退返回了首页）`);
+      if (is404 && !isHtml) failures.push(`${probe} 返回 404 但内容类型为 ${type}，应提供 404.html 引导页`);
+    } catch (error) {
+      failures.push(`404 探测 ${probe} 请求失败：${error.message}`);
+    }
+  }
+  // 被写错的 robots/sitemap 路径不能返回 HTML
+  for (const probe of ['/robots.txt', '/sitemap.xml']) {
+    const res = await fetch(`${BASE}${probe}`);
+    const type = res.headers.get('content-type') || '';
+    const ok = res.status === 200 && !type.includes('text/html');
+    console.log(`  ${ok ? '✓' : '✗'} ${probe.padEnd(32)} ${res.status} ${type.split(';')[0]}`);
+    if (!ok) failures.push(`${probe} 返回 ${res.status} ${type}——应为文件本身而非 HTML（否则爬虫解析失败）`);
+  }
+
   await browser.close();
 
   console.log('\n' + '='.repeat(74));

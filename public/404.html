@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#172f2b" />
+<meta name="color-scheme" content="dark light" />
+<meta name="robots" content="noindex" />
+<meta name="description" content="页面不存在。返回《江格尔》十二英雄数字展陈交互系统的四个入口。" />
+<title>页面不存在｜《江格尔》十二英雄数字展陈交互系统</title>
+<link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+<!--
+  这个文件解决一个真实问题（软 404）：
+  静态托管在找不到路径时普遍会"回退返回 index.html"，于是
+    · 打错入口的人看到的是首页，会以为"内容缺失"或"链接是假的"；
+    · /robots.txt、/sitemap.xml 这类被写错的路径也会返回 HTML，
+      爬虫拿 HTML 当 sitemap 解析 —— 收录直接失败。
+  Cloudflare Pages / GitHub Pages 等平台在存在 404.html 时会以**真正的 404 状态码**
+  返回它，因此这里同时解决"状态码正确"与"给人一条出路"。
+  样式与脚本刻意全部内联：这一页必须能在任何部署形态下独立打开。
+-->
+<style>
+  :root{
+    --bg:#0f1f1c;--panel:#172f2b;--panel-2:#1c3733;--line:#2a4741;--line-soft:#203a35;
+    --ink:#e8e2d4;--ink-dim:#a8a291;--ink-faint:#6f6a5d;
+    --gold:#c9a227;--gold-soft:#8a6a2c;--gold-bright:#e2c352;
+    --mono:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;
+    --sans:"Songti SC","Noto Serif SC",Georgia,"Microsoft YaHei",serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);
+    font-family:var(--sans);line-height:1.7;display:flex;align-items:center;justify-content:center;padding:32px}
+  .wrap{max-width:920px;width:100%}
+  .top{display:flex;align-items:center;gap:12px;margin-bottom:34px}
+  .mark{width:34px;height:40px;border:1px solid var(--gold);color:var(--gold);
+    display:grid;place-items:center;font-size:20px;border-radius:6px 6px 2px 2px}
+  .top b{display:block;font-size:15px}
+  .top small{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--ink-faint)}
+  .code{font-family:var(--mono);font-size:11px;letter-spacing:.24em;color:var(--gold-soft);
+    text-transform:uppercase;margin:0 0 14px}
+  h1{font-size:clamp(24px,4vw,40px);line-height:1.3;margin:0 0 16px;font-weight:600}
+  h1 em{font-style:normal;color:var(--gold-bright)}
+  p.lede{color:var(--ink-dim);font-size:16px;max-width:70ch;margin:0 0 12px}
+  .note{margin:22px 0 30px;padding:14px 18px;border-left:2px solid var(--gold-soft);
+    background:var(--panel);color:var(--ink-dim);font-size:14px}
+  .note code{font-family:var(--mono);font-size:12.5px;background:var(--panel-2);
+    padding:1px 6px;border-radius:3px;color:var(--gold-bright)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:12px}
+  a.card{display:block;border:1px solid var(--line-soft);border-radius:6px;padding:16px 18px;
+    text-decoration:none;color:inherit;background:var(--panel);transition:border-color .2s,transform .2s}
+  a.card:hover{border-color:var(--gold);transform:translateY(-2px)}
+  .card .t{font-size:15.5px;font-weight:600;margin:0 0 6px}
+  .card .d{font-size:13px;color:var(--ink-dim);margin:0}
+  .card .k{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--ink-faint);
+    text-transform:uppercase;margin:0 0 7px}
+  footer{margin-top:34px;font-family:var(--mono);font-size:11px;color:var(--ink-faint);
+    display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  @media print{body{background:#fff;color:#111}a.card{border-color:#b9b9b3}
+    .card .d,.note{color:#3a3a3a}footer{color:#5a5a5a}}
+</style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="top">
+      <span class="mark" aria-hidden="true">᠈</span>
+      <span><b>《江格尔》十二英雄</b><small>THE EPIC OF JANGAR</small></span>
+    </div>
+
+    <p class="code">ERROR 404 · PAGE NOT FOUND</p>
+    <h1>这个地址<em>没有对应页面</em>。</h1>
+    <p class="lede">
+      可能是链接拼写有误，或该页面已经改名。下面四个入口是本次参赛作品的全部交付页面。
+    </p>
+    <div class="note">
+      如果你是从 <code>sitemap.xml</code> 或他人分享的链接点进来的，说明那个地址已失效。
+      本作品为 2026 年第十四届全国大学生数字媒体科技作品及创意竞赛参赛作品，
+      申报赛项：<strong>指定命题「民族文化 创新表达」</strong>。
+    </div>
+
+    <div class="grid">
+      <a class="card" href="./index.html">
+        <p class="k">APPLICATION</p>
+        <p class="t">数字展馆</p>
+        <p class="d">十二英雄 3D 数字形象、图鉴、纹样解读与文化问答（应用实例）。</p>
+      </a>
+      <a class="card" href="./console.html">
+        <p class="k">TECHNICAL CONSOLE</p>
+        <p class="t">技术控制台</p>
+        <p class="d">四层架构、资产量化清单、预算断言与运行约束。</p>
+      </a>
+      <a class="card" href="./graph.html">
+        <p class="k">KNOWLEDGE GRAPH</p>
+        <p class="t">知识图谱与史料溯源</p>
+        <p class="d">十二英雄异名、谱系与逐条来源；未核实项显式标注。</p>
+      </a>
+      <a class="card" href="./ask.html">
+        <p class="k">ASSISTED NARRATION</p>
+        <p class="t">问史诗 · AI 辅助叙述</p>
+        <p class="d">本地检索增强问答，AI 使用情况界面化披露。</p>
+      </a>
+    </div>
+
+    <footer>
+      <span>《江格尔》十二英雄——基于手写 WebGL 管线的史诗数字展陈交互系统</span>
+      <span>HTTP 404 · 若你认为这是错误，请回到首页重新进入</span>
+    </footer>
+  </main>
+</body>
+</html>

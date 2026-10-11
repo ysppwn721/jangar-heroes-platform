@@ -434,6 +434,12 @@ export const runGen = async () => {
   .mark.fail { color: #8a2f1e !important; }
   /* 交互控件在纸面上没有意义，去掉视觉重量 */
   button, .toggle, #send, .mode button { background: #f0f0ec !important; color: #111111 !important; border-color: #b9b9b3 !important; }
+  /* 徽章：.badge.ok / .badge.fail 的 color 在原样式里是硬编码的浅绿/浅红，
+     不随上面重写的变量翻转，因此会逃出反色体系（实测打印对比度只有 2.31）。
+     这里显式改用变量，与反色后的 --ok / --bad 保持一致。 */
+  .badge.ok { color: var(--ok) !important; border-color: var(--ok) !important; }
+  .badge.fail { color: var(--bad) !important; border-color: var(--bad) !important; }
+  .badge { color: #3a3a3a !important; border-color: #b9b9b3 !important; }
   .graph-bar { background: #ffffff !important; border-bottom-color: #d8d8d2 !important; }
   /* 图谱是交互组件，打印时以静态提示替代空白区域 */
   #graph { display: none !important; }
@@ -473,7 +479,7 @@ export const runGen = async () => {
 
   <header class="hero">
     <div class="wrap">
-      <p class="eyebrow">软件作品 · 技术控制台 · 移动与网络应用开发类</p>
+      <p class="eyebrow">软件作品 · 技术控制台 · 指定命题「民族文化 创新表达」</p>
       <h1>把 70–117 MB 一尊的三维资产，<br />压到能在手机里<em>真实旋转</em>。</h1>
       <p class="lede">
         《江格尔》史诗非遗数字化采集产出的原始三维资产，单尊 <strong>150 万三角面</strong>、
