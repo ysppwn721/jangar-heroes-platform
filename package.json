@@ -7,23 +7,19 @@
   "scripts": {
     "dev": "node scripts/preview-static.mjs",
     "preview": "node scripts/preview-static.mjs --dist",
-
     "assets": "node scripts/assetctl.mjs all",
     "assets:verify": "node scripts/assetctl.mjs verify",
     "assets:report": "node scripts/assetctl.mjs report",
     "assets:cache": "node scripts/assetctl.mjs cache",
     "assets:manifest": "node scripts/assetctl.mjs write-manifest",
-
     "graph:check": "node scripts/check-graph.mjs",
     "ask:check": "node scripts/check-ask.mjs",
     "knowledge:sync": "node scripts/sync-knowledge.mjs",
     "knowledge:check": "node scripts/sync-knowledge.mjs --check",
-
     "gen:console": "node scripts/gen-console.mjs",
     "gen:graph": "node scripts/gen-graph-page.mjs",
     "gen:ask": "node scripts/gen-ask-page.mjs",
     "gen": "npm run assets && npm run gen:console && npm run gen:graph && npm run gen:ask",
-
     "build": "node scripts/build.mjs",
     "optimize": "node scripts/optimize-assets.mjs && node scripts/optimize-assets.mjs --preview",
     "models:check": "node scripts/ingest-models.mjs --check",
@@ -33,7 +29,6 @@
     "check": "node scripts/check-assets.mjs",
     "check:css": "node scripts/check-css.mjs",
     "images": "node scripts/prepare-images.mjs",
-
     "test:ui": "node scripts/check-ui.cjs",
     "test:3d": "node scripts/check-3d.cjs",
     "test:content": "node scripts/check-content.cjs",
@@ -48,16 +43,14 @@
     "test:selfcontained": "node tools/check-selfcontained.mjs",
     "test:migration": "node tools/migration-test.mjs",
     "seo": "node scripts/gen-seo.mjs",
-
     "audit:visual": "node scripts/audit-visual.cjs",
     "audit:models": "node scripts/analyze-models.mjs && node scripts/analyze-cache.mjs",
     "bench": "node scripts/bench-page.cjs",
     "search:build": "node scripts/build-search.mjs",
     "sync:retrieval": "node scripts/sync-retrieval.mjs",
-
     "test:all": "npm run check && npm run check:css && npm run assets:verify && npm run graph:check && npm run ask:check && npm run knowledge:check && npm run test:roster && npm run sync:retrieval -- --check && npm run test:ui && npm run test:3d && npm run test:content && npm run test:progressive && npm run test:offline && npm run test:layout && npm run test:search",
-
-    "release": "npm run build && npm run test:dist"
+    "release": "npm run build && npm run test:site-meta && npm run test:selfcontained && npm run test:dist && npm run test:migration",
+    "test:site-meta": "node tools/check-site-meta.mjs"
   },
   "devDependencies": {
     "playwright-core": "^1.63.0"

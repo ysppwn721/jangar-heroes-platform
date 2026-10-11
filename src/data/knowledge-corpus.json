@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-10-11T12:23:44.366Z",
+  "generatedAt": "2026-10-11T12:26:23.909Z",
   "origin": "miniprogram:miniprogram/data/knowledge.js",
   "generator": "scripts/sync-knowledge.mjs",
   "note": "由单一数据源同步。两端共用同一套语料与同一套检索实现（src/retrieval-core.js ↔ 小程序 utils/retrieval.js）。",
