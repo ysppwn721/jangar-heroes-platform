@@ -45,9 +45,12 @@
            · 尊重 prefers-reduced-motion / prefers-reduced-data，此时只显示静态底图。
          素材到位后需要补：视频/音乐署名与授权（官方要求第三方资源"来源及授权情况清楚"）。 -->
     <section id="prologue" class="prologue">
+      <!-- 天空层：独立于 <video>。因为 prefers-reduced-motion 下 video 会被 CSS 隐藏，
+           而 video 的 poster 随 video 一起消失——靠 poster 撑背景会在那种情况下开天窗。 -->
+      <div class="prologue-sky" aria-hidden="true"></div>
       <video class="prologue-media" id="prologue-video"
              autoplay muted loop playsinline preload="metadata"
-             poster="./images/hero-bg.webp" aria-hidden="true" tabindex="-1">
+             poster="./images/sky-bright.svg" aria-hidden="true" tabindex="-1">
         <source src="./media/prologue.webm" type="video/webm" />
         <source src="./media/prologue.mp4" type="video/mp4" />
       </video>
