@@ -14,15 +14,15 @@
   <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
-  <a class="skip-link" href="#home">跳到主要内容</a>
+  <a class="skip-link" href="#prologue">跳到主要内容</a>
   <!-- 离线状态条：由 src/offline.js 控制显示。默认隐藏，未启用离线能力时不打扰观众。 -->
   <div class="offline-banner" id="offline-banner" role="status" aria-live="polite" hidden>
     <span class="offline-dot" aria-hidden="true"></span>
     <span id="offline-text">离线模式 · 正在展示已缓存的内容</span>
   </div>
   <header class="site-header">
-    <a href="#home" class="brand" aria-label="《江格尔》十二英雄 首页"><span class="brand-mark" aria-hidden="true">᠈</span><span><strong>《江格尔》<span class="brand-dot"> · </span>十二英雄</strong><small>THE EPIC OF JANGAR</small></span></a>
-    <nav class="desktop-nav" aria-label="主导航" id="navigation"><a class="active" href="#home">数字展馆</a><a href="#heroes">十二英雄</a><a href="#epic">走进江格尔</a><a href="#stories">史诗长卷</a><a href="#craft">非遗新生</a><a href="#discover">探索问答</a><a href="./console.html">技术控制台</a><a href="./graph.html">知识图谱</a><a href="./ask.html">问史诗</a></nav>
+    <a href="#prologue" class="brand" aria-label="《江格尔》十二英雄 首页"><span class="brand-mark" aria-hidden="true">᠈</span><span><strong>《江格尔》<span class="brand-dot"> · </span>十二英雄</strong><small>THE EPIC OF JANGAR</small></span></a>
+    <nav class="desktop-nav" aria-label="主导航" id="navigation"><a href="#prologue">序幕</a><a href="#heroes">十二英雄</a><a href="#epic">走进江格尔</a><a href="#stories">史诗长卷</a><a href="#craft">非遗新生</a><a href="#discover">探索问答</a><a href="#evidence">工程证据</a></nav>
     <div class="header-actions">
       <!-- 站内搜索入口：14 分钟阅读量的展馆需要一个"秒定位"的办法。
            用对话框承载，不占版面，且原生支持 Esc 关闭与焦点管理。 -->
@@ -35,6 +35,36 @@
   <!-- 阅读进度：只读不占位；由 src/search-ui.js 更新宽度 -->
   <div class="reading-progress" id="reading-progress" role="progressbar" aria-label="阅读进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="reading-progress-bar"></span></div>
   <main>
+    <!-- ══ 序幕 · 进入 ══════════════════════════════════════════════════════
+         教师的意见是"进入时播放史诗视频，配呼麦/马头琴，视频做背景"。
+         这里的实现刻意做成"视频可选"：
+           · <video> 指向 ./media/prologue.webm|mp4，**文件不存在时浏览器自动显示 poster**，
+             因此现在放的背景图就是视频到位前的正式观感，把视频丢进 public/media/ 即生效。
+           · 音频默认静音——所有现代浏览器都禁止带声音的自动播放，必须有显式"开启声音"按钮。
+           · poster 是必需品：iOS 低电量模式禁一切自动播放，那时看到的就是这张图。
+           · 尊重 prefers-reduced-motion / prefers-reduced-data，此时只显示静态底图。
+         素材到位后需要补：视频/音乐署名与授权（官方要求第三方资源"来源及授权情况清楚"）。 -->
+    <section id="prologue" class="prologue">
+      <video class="prologue-media" id="prologue-video"
+             autoplay muted loop playsinline preload="metadata"
+             poster="./images/hero-bg.webp" aria-hidden="true" tabindex="-1">
+        <source src="./media/prologue.webm" type="video/webm" />
+        <source src="./media/prologue.mp4" type="video/mp4" />
+      </video>
+      <div class="prologue-veil" aria-hidden="true"></div>
+      <div class="prologue-inner">
+        <p class="prologue-kicker">蒙古族英雄史诗 · 数字文化展馆</p>
+        <h1 class="prologue-title">宝木巴</h1>
+        <p class="prologue-subtitle">英雄的草原</p>
+        <p class="prologue-quote">十二位英雄，十二种守护的力量。<br />史诗还在被讲述。</p>
+        <div class="prologue-actions">
+          <a class="prologue-enter" href="#heroes">进入展馆 <span aria-hidden="true">↓</span></a>
+          <button class="prologue-sound" id="prologue-sound" type="button"
+                  aria-pressed="false" aria-controls="prologue-video">开启声音</button>
+        </div>
+        <p class="prologue-credit">视频与音乐素材：待补（需注明来源与授权）</p>
+      </div>
+    </section>
     <section id="home" class="hero">
       <div class="hero-topline"><span><i class="status-dot"></i> 蒙古族英雄史诗 · 数字文化展馆</span><span class="edition">COLLECTION 001 — THE HEROES</span></div>
       <div class="hero-layout">
@@ -68,48 +98,6 @@
          评审通常只打开首页，若不在此处给出入口，知识图谱、史料溯源、AI 叙述与技术控制台就不可发现。
          构建流程有两条门禁断言：dist/ 必须含全部页面，且本页必须链接到每一页——
          任一条不满足即构建失败，防止"证据做出来了但评审找不到"。 -->
-    <section id="evidence" class="evidence-nav section-shell" aria-labelledby="evidence-title">
-      <style>
-        .evidence-nav .ev-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:14px;margin-top:22px}
-        .evidence-nav .ev-card{display:block;border:1px solid rgba(201,162,39,.3);border-radius:6px;padding:18px 18px 16px;text-decoration:none;color:inherit;background:rgba(23,47,43,.35);transition:border-color .2s,transform .2s}
-        .evidence-nav .ev-card:hover{border-color:#c9a227;transform:translateY(-2px)}
-        .evidence-nav .ev-k{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;opacity:.62;margin:0 0 8px}
-        .evidence-nav .ev-t{font-size:16.5px;font-weight:600;margin:0 0 7px}
-        .evidence-nav .ev-d{font-size:13.5px;line-height:1.65;opacity:.78;margin:0}
-        .evidence-nav .ev-note{font-size:13px;opacity:.66;margin:16px 0 0;line-height:1.75}
-        .evidence-nav .ev-note code{font-family:ui-monospace,Consolas,monospace;font-size:12px}
-      </style>
-      <div class="section-heading"><div><p class="eyebrow">REVIEWER ENTRY · 工程与数据证据</p><h2 id="evidence-title">这一页是<span>应用实例</span>。<br />作品本体是一个<span>软件系统</span>。</h2></div><p class="section-intro">四份可核验材料分别承载工程、数据与 AI 披露证据。<br />全部指标由构建期脚本从二进制现场量测，可复跑复现。</p></div>
-      <div class="ev-grid">
-        <a class="ev-card" href="./console.html">
-          <p class="ev-k">TECHNICAL CONSOLE</p>
-          <p class="ev-t">技术控制台</p>
-          <p class="ev-d">四层架构、24 个资产逐条量化清单、顶点缓存效率、预算断言与运行约束。原始 930.22 MiB → 精细版 53.74 MiB → gzip 36.01 MiB。</p>
-        </a>
-        <a class="ev-card" href="./graph.html">
-          <p class="ev-k">KNOWLEDGE GRAPH</p>
-          <p class="ev-t">知识图谱与史料溯源</p>
-          <p class="ev-d">十二英雄的异名对照、谱系关系与逐条来源。核不清的显式标「待核对」，已知缺口单独列成一节。</p>
-        </a>
-        <a class="ev-card" href="./ask.html">
-          <p class="ev-k">ASSISTED NARRATION</p>
-          <p class="ev-t">问史诗 · AI 辅助叙述</p>
-          <p class="ev-d">本地检索增强问答，AI 使用情况做成界面化披露。依据不足时拒答而非编造，47 条边界测试纳入构建门禁。</p>
-        </a>
-        <a class="ev-card" href="https://github.com/ysppwn721/jiangger-blindbox-website" target="_blank" rel="noopener noreferrer">
-          <p class="ev-k">SOURCE &amp; BUILD</p>
-          <p class="ev-t">源码与构建门禁</p>
-          <p class="ev-d">自研 GLB 解析与手写 WebGL 管线，零第三方运行时依赖（无 Three.js / 无 Draco 解码器 / 无 CDN）。</p>
-        </a>
-      </div>
-      <p class="ev-note">
-        <strong>为什么要单列这一页：</strong>本作品的申报赛项是<strong>指定命题「民族文化 创新表达」</strong>。
-        本页呈现文化应用，上述四页承载工程与数据证据。
-        构建期有两条门禁守住入口：<code>dist/</code> 必须包含全部页面，且本页必须链接到每一页——
-        任一条不满足即构建失败，避免"证据做出来了但评审找不到"。
-      </p>
-    </section>
-
     <section id="heroes" class="collection section-shell">
       <div class="section-heading"><div><p class="eyebrow">01 / MEET THE HEROES</p><h2>每一位英雄，<span>都是一段传奇。</span></h2></div><p class="section-intro">从史诗中走来，与你在此相遇。<br />选择一位英雄，近距离探索他的数字形象。</p></div>
       <div class="collection-toolbar"><div class="filters" role="group" aria-label="筛选英雄"><button class="filter active" data-filter="all" aria-pressed="true">全部英雄 <sup>12</sup></button><button class="filter" data-filter="hidden" aria-pressed="false">特别典藏 <sup>02</sup></button><button class="filter" data-filter="regular" aria-pressed="false">英雄群像 <sup>10</sup></button><button class="filter" data-filter="saved" aria-pressed="false">我的收藏 <sup id="saved-count">00</sup></button></div><span class="collection-hint">点击卡片，进入 3D 展厅 <span aria-hidden="true">↗</span></span></div>
@@ -269,7 +257,7 @@
       </div><p class="editorial-note">上方纹样为本站绘制的设计示意；服饰与色彩说明针对本系列文创形象，不代表所有蒙古族地区与时期的统一样式。</p>
     </section>
 
-    <section id="craft" class="craft-section section-shell"><div class="section-heading"><div><p class="eyebrow">06 / HERITAGE, REIMAGINED</p><h2>把文化，<span>带进日常。</span></h2></div><p class="section-intro">从一个纹样，到一位英雄。<br />用当代的设计语言，续写草原的故事。</p></div><div class="craft-grid"><article class="craft-card craft-feature"><img src="./images/packaging.webp" alt="《江格尔》十二英雄文创包装设计" loading="lazy" width="1000" height="800" /><div><span class="eyebrow">01 — CULTURAL DESIGN</span><h3>让史诗变得可触摸</h3><p>从蒙古袍、云纹与草原色彩中汲取灵感，构建属于十二英雄的当代文创形象。</p></div></article><article class="craft-card craft-digital"><span class="craft-symbol" aria-hidden="true">◇</span><div><span class="eyebrow">02 — DIGITAL EXPERIENCE</span><h3>换个角度，看见传承</h3><p>旋转、放大、近距离观看。让数字技术连接古老史诗与今天的好奇心。</p><a class="text-link" href="#home">回到数字展厅 <span aria-hidden="true">↗</span></a></div></article><article class="craft-card craft-story"><span class="story-number" aria-hidden="true">12</span><div><span class="eyebrow">03 — A SHARED STORY</span><h3>英雄的故事，与你有关</h3><p>收藏你喜爱的角色，了解每个名字背后的勇气，让一次相遇成为文化探索的开始。</p><a class="text-link dark-link" href="#heroes">找到你的英雄 <span aria-hidden="true">↗</span></a></div></article></div></section>
+    <section id="craft" class="craft-section section-shell"><div class="section-heading"><div><p class="eyebrow">06 / HERITAGE, REIMAGINED</p><h2>把文化，<span>带进日常。</span></h2></div><p class="section-intro">从一个纹样，到一位英雄。<br />用当代的设计语言，续写草原的故事。</p></div><div class="craft-grid"><article class="craft-card craft-feature"><img src="./images/packaging.webp" alt="《江格尔》十二英雄文创包装设计" loading="lazy" width="1000" height="800" /><div><span class="eyebrow">01 — CULTURAL DESIGN</span><h3>让史诗变得可触摸</h3><p>从蒙古袍、云纹与草原色彩中汲取灵感，构建属于十二英雄的当代文创形象。</p></div></article><article class="craft-card craft-digital"><span class="craft-symbol" aria-hidden="true">◇</span><div><span class="eyebrow">02 — DIGITAL EXPERIENCE</span><h3>换个角度，看见传承</h3><p>旋转、放大、近距离观看。让数字技术连接古老史诗与今天的好奇心。</p><a class="text-link" href="#prologue">回到数字展厅 <span aria-hidden="true">↗</span></a></div></article><article class="craft-card craft-story"><span class="story-number" aria-hidden="true">12</span><div><span class="eyebrow">03 — A SHARED STORY</span><h3>英雄的故事，与你有关</h3><p>收藏你喜爱的角色，了解每个名字背后的勇气，让一次相遇成为文化探索的开始。</p><a class="text-link dark-link" href="#heroes">找到你的英雄 <span aria-hidden="true">↗</span></a></div></article></div></section>
     <section id="discover" class="discover-section section-shell">
       <div class="section-heading"><div><p class="eyebrow">07 / TAKE A LITTLE KNOWLEDGE HOME</p><h2>停留片刻，<span>把故事记在心里。</span></h2></div><p class="section-intro">三道小题，回望刚刚走过的展馆。<br />答错也没关系，每个答案都是新的入口。</p></div>
       <div class="discover-grid">
@@ -279,9 +267,59 @@
       </div>
     </section>
 
-    <section class="closing section-shell"><span class="closing-star" aria-hidden="true">✧</span><p class="eyebrow">THE STORY CONTINUES</p><h2>史诗未完，<span>待你入场。</span></h2><a class="button button-gold" href="#home">再次遇见英雄 <span aria-hidden="true">↗</span></a></section>
+    <section class="closing section-shell"><span class="closing-star" aria-hidden="true">✧</span><p class="eyebrow">THE STORY CONTINUES</p><h2>史诗未完，<span>待你入场。</span></h2><a class="button button-gold" href="#prologue">再次遇见英雄 <span aria-hidden="true">↗</span></a></section>
+    <!-- 工程与数据证据：降级并后置。教师意见是"结构不清晰"，而这一块原本在第 2 屏，
+         把评委和观众直接拉进技术叙事。工程证据是我们的强项（"完成度与可验证性"20 分需要它），
+         但不该占据叙事主线——因此折叠放到主内容末尾，仍在同一页、仍被链接。 -->
+    <details class="evidence-fold section-shell" id="evidence">
+      <summary class="evidence-summary">
+        <span class="evidence-summary-t">工程与数据证据</span>
+        <span class="evidence-summary-d">技术控制台 · 知识图谱与史料溯源 · 问史诗 · 源码与构建门禁</span>
+      </summary>
+      <section id="evidence" class="evidence-nav section-shell" aria-labelledby="evidence-title">
+        <style>
+          .evidence-nav .ev-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:14px;margin-top:22px}
+          .evidence-nav .ev-card{display:block;border:1px solid rgba(201,162,39,.3);border-radius:6px;padding:18px 18px 16px;text-decoration:none;color:inherit;background:rgba(23,47,43,.35);transition:border-color .2s,transform .2s}
+          .evidence-nav .ev-card:hover{border-color:#c9a227;transform:translateY(-2px)}
+          .evidence-nav .ev-k{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;opacity:.62;margin:0 0 8px}
+          .evidence-nav .ev-t{font-size:16.5px;font-weight:600;margin:0 0 7px}
+          .evidence-nav .ev-d{font-size:13.5px;line-height:1.65;opacity:.78;margin:0}
+          .evidence-nav .ev-note{font-size:13px;opacity:.66;margin:16px 0 0;line-height:1.75}
+          .evidence-nav .ev-note code{font-family:ui-monospace,Consolas,monospace;font-size:12px}
+        </style>
+        <div class="section-heading"><div><p class="eyebrow">REVIEWER ENTRY · 工程与数据证据</p><h2 id="evidence-title">这一页是<span>应用实例</span>。<br />作品本体是一个<span>软件系统</span>。</h2></div><p class="section-intro">四份可核验材料分别承载工程、数据与 AI 披露证据。<br />全部指标由构建期脚本从二进制现场量测，可复跑复现。</p></div>
+        <div class="ev-grid">
+          <a class="ev-card" href="./console.html">
+            <p class="ev-k">TECHNICAL CONSOLE</p>
+            <p class="ev-t">技术控制台</p>
+            <p class="ev-d">四层架构、24 个资产逐条量化清单、顶点缓存效率、预算断言与运行约束。原始 930.22 MiB → 精细版 53.74 MiB → gzip 36.01 MiB。</p>
+          </a>
+          <a class="ev-card" href="./graph.html">
+            <p class="ev-k">KNOWLEDGE GRAPH</p>
+            <p class="ev-t">知识图谱与史料溯源</p>
+            <p class="ev-d">十二英雄的异名对照、谱系关系与逐条来源。核不清的显式标「待核对」，已知缺口单独列成一节。</p>
+          </a>
+          <a class="ev-card" href="./ask.html">
+            <p class="ev-k">ASSISTED NARRATION</p>
+            <p class="ev-t">问史诗 · AI 辅助叙述</p>
+            <p class="ev-d">本地检索增强问答，AI 使用情况做成界面化披露。依据不足时拒答而非编造，47 条边界测试纳入构建门禁。</p>
+          </a>
+          <a class="ev-card" href="https://github.com/ysppwn721/jiangger-blindbox-website" target="_blank" rel="noopener noreferrer">
+            <p class="ev-k">SOURCE &amp; BUILD</p>
+            <p class="ev-t">源码与构建门禁</p>
+            <p class="ev-d">自研 GLB 解析与手写 WebGL 管线，零第三方运行时依赖（无 Three.js / 无 Draco 解码器 / 无 CDN）。</p>
+          </a>
+        </div>
+        <p class="ev-note">
+          <strong>为什么要单列这一页：</strong>本作品的申报赛项是<strong>指定命题「民族文化 创新表达」</strong>。
+          本页呈现文化应用，上述四页承载工程与数据证据。
+          构建期有两条门禁守住入口：<code>dist/</code> 必须包含全部页面，且本页必须链接到每一页——
+          任一条不满足即构建失败，避免"证据做出来了但评审找不到"。
+        </p>
+      </section>
+    </details>
   </main>
-  <footer class="site-footer section-shell"><a href="#home" class="brand"><span class="brand-mark" aria-hidden="true">᠈</span><span><strong>《江格尔》十二英雄</strong><small>THE EPIC OF JANGAR</small></span></a><p>以当代创意，致敬蒙古族英雄史诗。<br /><span>角色造型为文创演绎，故事介绍为简述。</span></p><a href="#home" class="back-top">回到顶部 ↑</a><div class="footer-bottom"><span>© <span id="year">2026</span> 《江格尔》十二英雄　江格尔文化数字展馆</span><span>HERITAGE MEETS THE FUTURE.</span></div></footer>
+  <footer class="site-footer section-shell"><a href="#prologue" class="brand"><span class="brand-mark" aria-hidden="true">᠈</span><span><strong>《江格尔》十二英雄</strong><small>THE EPIC OF JANGAR</small></span></a><p>以当代创意，致敬蒙古族英雄史诗。<br /><span>角色造型为文创演绎，故事介绍为简述。</span></p><a href="#prologue" class="back-top">回到顶部 ↑</a><div class="footer-bottom"><span>© <span id="year">2026</span> 《江格尔》十二英雄　江格尔文化数字展馆</span><span>HERITAGE MEETS THE FUTURE.</span></div></footer>
   <dialog id="hero-dialog" class="hero-dialog"><button class="dialog-close icon-button" aria-label="关闭英雄介绍">×</button><div class="dialog-image"><img id="dialog-poster" alt="" width="450" height="650" /></div><div class="dialog-copy"><p class="eyebrow" id="dialog-index"></p><h2 id="dialog-name"></h2><p class="dialog-title" id="dialog-title"></p><p id="dialog-description"></p><h3>文创设计灵感</h3><ul id="dialog-features"></ul><button id="dialog-view" class="button button-gold">进入 3D 展厅 <span aria-hidden="true">↗</span></button><p class="dialog-note">角色与配件为文创设计演绎。</p></div></dialog>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 

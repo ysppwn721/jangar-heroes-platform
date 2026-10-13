@@ -149,6 +149,30 @@ $('#year').textContent = new Date().getFullYear();
 renderCards();
 // 离线能力（Service Worker + 离线状态条 + 省流量模式开关）：不阻塞首屏，注册在 load 之后
 initOffline();
+
+/* 序幕的声音开关。
+ * 为什么必须做成"点击才能有声"：所有现代浏览器都禁止带声音的自动播放，
+ * 视频只能以 muted 起步。这里不去猜、也不尝试绕过，而是给一个明确的按钮——
+ * 现场演示时先静音播背景、观众就位再点开声音，比赌浏览器策略可靠得多。
+ * 另外：prefers-reduced-motion / prefers-reduced-data 下 <video> 被 CSS 隐藏，
+ * 此时按钮没有意义，直接不接线（按钮也就不会出现误导性的反馈）。 */
+{
+  const video = $('#prologue-video');
+  const btn = $('#prologue-sound');
+  const videoUsable = video && video.offsetParent !== null && getComputedStyle(video).display !== 'none';
+  if (video && btn && videoUsable) {
+    btn.addEventListener('click', () => {
+      const on = video.muted;
+      video.muted = !on;
+      btn.setAttribute('aria-pressed', String(on));
+      btn.textContent = on ? '关闭声音' : '开启声音';
+      if (on) video.play().catch(() => { /* 极少数环境仍拒绝，静默忽略即可 */ });
+    });
+  } else if (btn) {
+    // 视频不可用时不要留一个点了没反应的按钮——那是在骗用户
+    btn.hidden = true;
+  }
+}
 // 关掉省流量模式后，如果观众正看着某个模型，就把精细档补上（不必退出重进 3D 展厅）
 onDemoModeChange(on => { if (!on) viewer?.upgrade?.(); });
 /* 站内搜索与阅读进度（方案 A：内容定位）。

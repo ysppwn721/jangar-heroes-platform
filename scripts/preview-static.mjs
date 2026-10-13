@@ -7,7 +7,7 @@ const gzip = promisify(zlib.gzip);
 const built=process.argv.includes('--dist');
 const root=path.resolve(built?'dist':'.');
 const port=Number(process.env.PORT||4173);
-const types={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml','.webp':'image/webp','.glb':'model/gltf-binary','.gz':'application/gzip','.json':'application/json','.txt':'text/plain; charset=utf-8','.xml':'application/xml; charset=utf-8'};
+const types={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml','.webp':'image/webp','.jpg':'image/jpeg','.jpeg':'image/jpeg','.png':'image/png','.glb':'model/gltf-binary','.gz':'application/gzip','.json':'application/json','.txt':'text/plain; charset=utf-8','.xml':'application/xml; charset=utf-8','.mp4':'video/mp4','.webm':'video/webm','.mp3':'audio/mpeg','.m4a':'audio/mp4','.ogg':'audio/ogg'};
 // Text assets are compressed the way Cloudflare and GitHub Pages compress them, so local
 // timing measurements reflect the deployed transfer size instead of raw file size.
 const compressible=new Set(['.html','.js','.css','.svg','.json']);
@@ -23,7 +23,7 @@ http.createServer(async(req,res)=>{
   // 允许访问的路径：四个交付页 + 404 页 + 稳定入口 + robots/sitemap + reports/ + src/images/models/licenses。
   // ⚠️ 这里**只做"目录级"白名单**，不再对具体文件名做白名单——否则未匹配的路径会被判 403，
   // 而不是走 404 分支。文件是否存在交给下面的 readFile 决定，"不存在"才是我们要模拟的行为。
-  const allowedDir=['src','images','models','licenses','reports'].includes(topLevel);
+  const allowedDir=['src','images','models','licenses','reports','media'].includes(topLevel);
   const allowedFile=/^[A-Za-z0-9._-]+$/.test(relative);
   if(!target.startsWith(base+path.sep)){res.writeHead(403,{'Content-Type':'text/plain; charset=utf-8'});res.end('Forbidden');return;}
   const extension=path.extname(target);

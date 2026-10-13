@@ -3236,3 +3236,131 @@ button.filter,.filter sup { color:#5b6650; }
   .viewer-tools { gap:5px; }
   .detail-button { font-size:9px;padding:7px;white-space:nowrap; }
 }
+
+/* ══ 序幕 · 视频背景 ══════════════════════════════════════════════════════
+   教师的意见是"进入时播放史诗视频、配呼麦马头琴，视频做背景"。
+   这里的实现刻意做成"视频可选"：
+     · <video> 的文件不存在时浏览器自动显示 poster，因此把视频丢进
+       public/media/prologue.webm|mp4 即生效，之前用同一套布局显示静态底图。
+     · 音频默认静音——带声音的自动播放被所有现代浏览器禁止，必须给显式按钮。
+     · poster 是必需品：iOS 低电量模式禁一切自动播放。
+     · 两个"减少"偏好都要尊重：减少动效 / 减少流量时不加载视频。 */
+.prologue{
+  position:relative;min-height:100svh;display:grid;place-items:center;
+  overflow:hidden;background:#0f1f1c;isolation:isolate;
+}
+.prologue-media{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  z-index:0;pointer-events:none;
+}
+/* 遮罩按"最坏情况"（亮背景）定，而不是按当前这张底图调——
+   视频到位后画面的明暗完全不可控，文字必须在那之前就保证可读。
+   两层：一层径向压中心（保住四角细节），一层纵向压顶部与底部（导航与按钮区）。 */
+.prologue-veil{
+  position:absolute;inset:0;z-index:1;
+  background:
+    radial-gradient(120% 88% at 50% 46%,rgba(15,31,28,.58) 0%,rgba(15,31,28,.82) 64%,rgba(15,31,28,.96) 100%),
+    linear-gradient(180deg,rgba(15,31,28,.72) 0%,rgba(15,31,28,.42) 34%,rgba(15,31,28,.68) 74%,rgba(15,31,28,.94) 100%);
+}
+.prologue-inner{
+  position:relative;z-index:2;text-align:center;
+  padding:clamp(24px,5vw,64px);max-width:min(920px,92vw);
+}
+.prologue-kicker{
+  font-family:var(--mono,ui-monospace,Consolas,monospace);
+  font-size:clamp(10px,1.1vw,12px);letter-spacing:.34em;text-transform:uppercase;
+  color:var(--gold-soft,#8a6a2c);margin:0 0 clamp(16px,3vw,26px);
+}
+.prologue-title{
+  font-family:var(--serif,"Songti SC",Georgia,serif);
+  font-size:clamp(44px,9.5vw,112px);line-height:1.06;font-weight:600;
+  letter-spacing:.06em;margin:0;color:#f2ede2;
+  text-shadow:0 2px 10px rgba(0,0,0,.55),0 8px 46px rgba(0,0,0,.6);
+}
+/* 副题：独立一行、居中、**不带前置标点**。
+   前两稿都栽在这里——拆 span 会让逗号落到行首（中文禁则），
+   合成一行又会在语义中间断开。独立成行是最稳的解法。 */
+.prologue-subtitle{
+  font-family:var(--serif,"Songti SC",Georgia,serif);
+  font-size:clamp(17px,2.6vw,30px);font-weight:400;
+  letter-spacing:.26em;text-indent:.26em;  /* 字间距会在末尾多留一格，用 text-indent 补正居中 */
+  color:var(--gold,#c9a227);
+  margin:-.35em 0 clamp(20px,3.4vw,32px);
+  text-shadow:0 2px 12px rgba(0,0,0,.6);
+}
+.prologue-quote{
+  font-size:clamp(14px,1.6vw,17px);line-height:2;
+  color:rgba(232,226,212,.9);margin:0 0 clamp(26px,4vw,40px);
+  text-shadow:0 1px 8px rgba(0,0,0,.6),0 4px 26px rgba(0,0,0,.55);
+}
+.prologue-actions{
+  display:flex;gap:14px;justify-content:center;align-items:center;flex-wrap:wrap;
+}
+.prologue-enter,.prologue-sound{
+  font:inherit;font-size:14px;letter-spacing:.08em;
+  padding:13px 26px;border-radius:3px;cursor:pointer;
+  transition:background .2s,border-color .2s,color .2s;
+}
+.prologue-enter{
+  background:var(--gold,#c9a227);color:#141d1a;border:1px solid var(--gold,#c9a227);
+  text-decoration:none;font-weight:600;
+}
+.prologue-enter:hover{background:var(--gold-bright,#e2c352);border-color:var(--gold-bright,#e2c352)}
+.prologue-sound{
+  background:transparent;color:rgba(232,226,212,.92);
+  border:1px solid rgba(201,162,39,.5);
+}
+.prologue-sound:hover{border-color:var(--gold,#c9a227);color:#fff}
+.prologue-sound[aria-pressed="true"]{
+  background:rgba(201,162,39,.16);border-color:var(--gold,#c9a227);
+}
+.prologue-credit{
+  font-size:11.5px;letter-spacing:.04em;color:rgba(232,226,212,.42);
+  margin:clamp(26px,4vw,42px) 0 0;
+}
+
+/* 尊重"减少动效"：不播放视频，只留静态底图（视频仍在 DOM 里，不占带宽因为没加载） */
+@media (prefers-reduced-motion:reduce){
+  .prologue-media{display:none}
+}
+/* 尊重"减少流量"：移动端或用户声明省流量时同样不加载视频 */
+@media (prefers-reduced-data:reduce){
+  .prologue-media{display:none}
+}
+
+/* ══ 工程证据 · 折叠区 ════════════════════════════════════════════════════
+   它原本在第 2 屏，把评委和观众直接拉进技术叙事（教师意见："结构不清晰"）。
+   工程证据是我们的强项（"完成度与可验证性"20 分需要它），但不该占据叙事主线，
+   因此折叠放到主内容末尾——仍在同一页、仍被首页链接（构建门禁要求）。 */
+.evidence-fold{
+  margin:clamp(48px,7vw,88px) auto 0;padding:0;
+  border-top:1px solid var(--line-soft,#203a35);
+}
+.evidence-summary{
+  display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;
+  padding:22px 0;cursor:pointer;list-style:none;
+  transition:color .2s;
+}
+.evidence-summary::-webkit-details-marker{display:none}
+.evidence-summary::before{
+  content:"＋";font-size:15px;color:var(--gold,#c9a227);
+  margin-right:4px;transition:transform .2s;
+}
+.evidence-fold[open] .evidence-summary::before{content:"－"}
+.evidence-summary:hover .evidence-summary-t{color:var(--gold-bright,#e2c352)}
+.evidence-summary-t{
+  font-family:var(--serif,"Songti SC",Georgia,serif);
+  font-size:clamp(17px,2.2vw,21px);font-weight:600;color:#e8e2d4;
+  transition:color .2s;
+}
+.evidence-summary-d{
+  font-size:12.5px;letter-spacing:.05em;color:rgba(232,226,212,.55);
+}
+/* 折叠体内的 section 不再重复上边距 */
+.evidence-fold > section{margin-top:0;padding-top:clamp(8px,2vw,20px)}
+
+@media (max-width:760px){
+  .prologue{min-height:92svh}
+  .prologue-actions{flex-direction:column;width:100%}
+  .prologue-enter,.prologue-sound{width:100%;text-align:center}
+}
